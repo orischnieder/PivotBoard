@@ -73,6 +73,27 @@
         <item quantity="other">%d comments</item>
     </plurals>
 
+    <!-- Profile -->
+    <string name="profile_title">Profile</string>
+    <string name="profile_label_posts">Posts</string>
+    <string name="profile_label_followers">Followers</string>
+    <string name="profile_label_following">Following</string>
+    <string name="profile_posts_header">Posts</string>
+    <string name="profile_action_follow">Follow</string>
+    <string name="profile_action_unfollow">Unfollow</string>
+    <string name="profile_action_edit">Edit profile</string>
+    <string name="profile_no_posts_own">You have not posted a setup yet.</string>
+    <string name="profile_no_posts_other">No posts yet.</string>
+    <string name="profile_error_load">This profile could not be loaded.</string>
+    <string name="profile_error_follow">Could not update follow. Please try again.</string>
+    <string name="profile_edit_title">Edit profile</string>
+    <string name="profile_hint_name">Display name</string>
+    <string name="profile_hint_bio">Bio</string>
+    <string name="profile_action_save">Save</string>
+    <string name="profile_saved">Profile updated.</string>
+    <string name="profile_error_save">Could not save your profile.</string>
+    <string name="profile_username_format">\@%1$s</string>
+
     <!-- Content descriptions -->
     <string name="cd_author_avatar">Author profile picture</string>
     <string name="cd_post_chart">Chart screenshot</string>

@@ -127,7 +127,8 @@ class MainActivity : AppCompatActivity() {
         R.id.nav_create -> CreatePostFragment()
         R.id.nav_watchlist -> WatchlistFragment()
         R.id.nav_notifications -> NotificationsFragment()
-        R.id.nav_profile -> ProfileFragment()
+        // null uid: the Profile tab always shows the signed-in user.
+        R.id.nav_profile -> ProfileFragment.newInstance(null)
         else -> null
     }
 

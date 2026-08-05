@@ -14,10 +14,16 @@ service cloud.firestore {
       return isSignedIn() && request.auth.uid == uid;
     }
 
-    // Profiles are public to signed-in users; only the owner may write their own document.
+    // Profiles are public to signed-in users; only the owner may write their own document,
+    // with one exception: following someone increments `followersCount` on their document,
+    // so that single key is writable by any signed-in user.
     match /users/{uid} {
       allow read: if isSignedIn();
-      allow create, update: if isSelf(uid);
+      allow create: if isSelf(uid);
+      allow update: if isSelf(uid)
+                    || (isSignedIn()
+                        && request.resource.data.diff(resource.data).affectedKeys()
+                             .hasOnly(['followersCount']));
       allow delete: if false;
 
       // Follow graph and watchlist live under the user document. Both sides of a follow

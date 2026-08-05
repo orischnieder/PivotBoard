@@ -67,6 +67,12 @@ class PostDetailActivity : AppCompatActivity(), CommentCallback {
         binding.detailBTNLike.setOnClickListener { toggleLike() }
         binding.detailBTNSend.setOnClickListener { sendComment() }
 
+        val openAuthor = View.OnClickListener {
+            post?.let { ProfileActivity.start(this, it.authorId) }
+        }
+        binding.detailIMGAvatar.setOnClickListener(openAuthor)
+        binding.detailLBLAuthor.setOnClickListener(openAuthor)
+
         if (postId.isEmpty()) {
             showError()
             return
@@ -242,8 +248,8 @@ class PostDetailActivity : AppCompatActivity(), CommentCallback {
         }
     }
 
-    // Profile is not built yet (section 5.5).
-    override fun onCommentAuthorClicked(comment: Comment, position: Int) = Unit
+    override fun onCommentAuthorClicked(comment: Comment, position: Int) =
+        ProfileActivity.start(this, comment.authorId)
 
     // --------------------------------------------------------------- States
 

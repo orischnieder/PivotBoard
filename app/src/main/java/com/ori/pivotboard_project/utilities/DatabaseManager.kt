@@ -142,7 +142,136 @@ class DatabaseManager private constructor(context: Context) {
         Constants.FIRESTORE.USER_CREATED_AT to System.currentTimeMillis()
     )
 
+    /** A single profile. Null result means the document does not exist. */
+    fun loadUser(uid: String, onResult: (user: User?, error: Exception?) -> Unit) {
+        userDoc(uid).get()
+            .addOnSuccessListener { doc ->
+                val user = if (doc.exists()) doc.toObject<User>()?.apply { id = doc.id } else null
+                onResult(user, null)
+            }
+            .addOnFailureListener { e ->
+                logFirestoreFailure("load user", e)
+                onResult(null, e)
+            }
+    }
+
+    /** Editable profile fields. Merged so counters and createdAt are untouched. */
+    fun updateProfile(
+        uid: String,
+        displayName: String,
+        bio: String,
+        onResult: (success: Boolean) -> Unit
+    ) {
+        userDoc(uid).set(
+            mapOf(
+                Constants.FIRESTORE.USER_DISPLAY_NAME to displayName,
+                Constants.FIRESTORE.USER_BIO to bio
+            ),
+            SetOptions.merge()
+        )
+            .addOnSuccessListener { onResult(true) }
+            .addOnFailureListener { e ->
+                logFirestoreFailure("update profile", e)
+                onResult(false)
+            }
+    }
+
+    // --------------------------------------------------------- Follow graph
+
+    fun isFollowing(uid: String, targetUid: String, onResult: (following: Boolean) -> Unit) {
+        if (uid.isEmpty() || targetUid.isEmpty()) {
+            onResult(false)
+            return
+        }
+        followingRef(uid).document(targetUid).get()
+            .addOnSuccessListener { onResult(it.exists()) }
+            .addOnFailureListener { onResult(false) }
+    }
+
+    /**
+     * Follows or unfollows in a single batch: both sides of the edge plus both counters, so
+     * the graph and the numbers can never disagree.
+     *
+     * Counters use set+merge because either user document may predate the counter field.
+     * Note this writes `followersCount` on *another* user's document - firestore.rules must
+     * allow that narrow case.
+     */
+    fun toggleFollow(
+        uid: String,
+        fromName: String,
+        targetUid: String,
+        shouldFollow: Boolean,
+        onResult: (success: Boolean) -> Unit
+    ) {
+        if (uid.isEmpty() || targetUid.isEmpty() || uid == targetUid) {
+            onResult(false)
+            return
+        }
+
+        val batch = db.batch()
+        val followingDoc = followingRef(uid).document(targetUid)
+        val followerDoc = followersRef(targetUid).document(uid)
+        val delta = if (shouldFollow) 1L else -1L
+
+        if (shouldFollow) {
+            val edge = mapOf(Constants.FIRESTORE.USER_CREATED_AT to System.currentTimeMillis())
+            batch.set(followingDoc, edge)
+            batch.set(followerDoc, edge)
+        } else {
+            batch.delete(followingDoc)
+            batch.delete(followerDoc)
+        }
+
+        batch.set(
+            userDoc(uid),
+            mapOf(Constants.FIRESTORE.USER_FOLLOWING_COUNT to FieldValue.increment(delta)),
+            SetOptions.merge()
+        )
+        batch.set(
+            userDoc(targetUid),
+            mapOf(Constants.FIRESTORE.USER_FOLLOWERS_COUNT to FieldValue.increment(delta)),
+            SetOptions.merge()
+        )
+
+        batch.commit()
+            .addOnSuccessListener {
+                if (shouldFollow) {
+                    addNotification(
+                        toUid = targetUid,
+                        type = Constants.NOTIFICATION_TYPE.FOLLOW,
+                        fromUid = uid,
+                        fromName = fromName
+                    )
+                }
+                onResult(true)
+            }
+            .addOnFailureListener { e ->
+                logFirestoreFailure("toggle follow", e)
+                onResult(false)
+            }
+    }
+
     // ---------------------------------------------------------------- Posts
+
+    /**
+     * Every post by one author, newest first.
+     *
+     * Sorted client-side on purpose: `whereEqualTo` plus `orderBy` on a different field
+     * would require a composite index, and this avoids asking for console setup.
+     */
+    fun loadUserPosts(uid: String, onResult: (posts: List<Post>?, error: Exception?) -> Unit) {
+        postsRef
+            .whereEqualTo(Constants.FIRESTORE.POST_AUTHOR_ID, uid)
+            .limit(Constants.FEED.PAGE_SIZE)
+            .get()
+            .addOnSuccessListener { snapshot ->
+                onResult(snapshot.toPosts().sortedByDescending { it.createdAt }, null)
+            }
+            .addOnFailureListener { e ->
+                logFirestoreFailure("load user posts", e)
+                onResult(null, e)
+            }
+    }
 
     /**
      * Writes a new post and bumps the author's `postsCount` in one batch, so the profile
