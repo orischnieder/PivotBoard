@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Placeholder brand mark: an upward pivot in a rounded square. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="96dp"
+    android:height="96dp"
+    android:viewportWidth="96"
+    android:viewportHeight="96">
+    <path
+        android:fillColor="#1F6FEB"
+        android:pathData="M16,4h64a12,12 0,0 1,12 12v64a12,12 0,0 1,-12 12h-64a12,12 0,0 1,-12 -12v-64a12,12 0,0 1,12 -12z" />
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="7"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M22,68 L40,68 L52,44 L64,58 L74,28" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M74,28 m-6,0 a6,6 0,1 0,12 0 a6,6 0,1 0,-12 0" />
+</vector>

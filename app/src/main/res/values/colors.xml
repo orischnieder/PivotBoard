@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <!-- Light scheme -->
+    <color name="primary_light">#1F6FEB</color>
+    <color name="on_primary_light">#FFFFFF</color>
+    <color name="primary_container_light">#D7E6FF</color>
+    <color name="on_primary_container_light">#00265C</color>
+
+    <color name="secondary_light">#00875A</color>
+    <color name="on_secondary_light">#FFFFFF</color>
+    <color name="secondary_container_light">#C7F2DF</color>
+    <color name="on_secondary_container_light">#00281A</color>
+
+    <color name="background_light">#FBFCFE</color>
+    <color name="on_background_light">#12151A</color>
+    <color name="surface_light">#FFFFFF</color>
+    <color name="on_surface_light">#12151A</color>
+    <color name="surface_variant_light">#E3E7EE</color>
+    <color name="on_surface_variant_light">#454B54</color>
+    <color name="outline_light">#767C86</color>
+
+    <color name="error_light">#B3261E</color>
+    <color name="on_error_light">#FFFFFF</color>
+
+    <!-- Dark scheme -->
+    <color name="primary_dark">#A8C7FF</color>
+    <color name="on_primary_dark">#00325C</color>
+    <color name="primary_container_dark">#00497F</color>
+    <color name="on_primary_container_dark">#D7E6FF</color>
+
+    <color name="secondary_dark">#7ED9B2</color>
+    <color name="on_secondary_dark">#003823</color>
+    <color name="secondary_container_dark">#005236</color>
+    <color name="on_secondary_container_dark">#C7F2DF</color>
+
+    <color name="background_dark">#11141A</color>
+    <color name="on_background_dark">#E3E6EB</color>
+    <color name="surface_dark">#191C22</color>
+    <color name="on_surface_dark">#E3E6EB</color>
+    <color name="surface_variant_dark">#414751</color>
+    <color name="on_surface_variant_dark">#C2C7D0</color>
+    <color name="outline_dark">#8C919B</color>
+
+    <color name="error_dark">#FFB4AB</color>
+    <color name="on_error_dark">#690005</color>
+
+    <!-- Semantic, theme-independent -->
+    <color name="gain_green">#00875A</color>
+    <color name="loss_red">#D1453B</color>
+</resources>

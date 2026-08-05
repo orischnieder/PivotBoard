@@ -1,0 +1,79 @@
+<resources>
+    <string name="app_name">PivotBoard</string>
+    <string name="app_tagline">Document and share your setups</string>
+
+    <!-- Product framing, required on Login and in About -->
+    <string name="disclaimer_not_advice">PivotBoard is a tool for documenting and discussing technical analysis. Nothing here is investment advice. Do your own research.</string>
+
+    <!-- Login -->
+    <string name="login_welcome">Welcome to PivotBoard</string>
+    <string name="login_sign_in">Sign in to continue</string>
+    <string name="login_failed">Sign in failed. Please try again.</string>
+    <string name="login_cancelled">Sign in cancelled.</string>
+    <string name="login_profile_failed">Signed in, but your profile could not be saved.</string>
+
+    <!-- Bottom navigation -->
+    <string name="nav_feed">Feed</string>
+    <string name="nav_create">Post</string>
+    <string name="nav_watchlist">Watchlist</string>
+    <string name="nav_notifications">Alerts</string>
+    <string name="nav_profile">Profile</string>
+
+    <!-- Placeholder screen copy, replaced as each feature lands -->
+    <string name="placeholder_feed">Your feed will appear here.</string>
+    <string name="placeholder_create">Create a new setup post here.</string>
+    <string name="placeholder_watchlist">Your watchlist will appear here.</string>
+    <string name="placeholder_notifications">Your notifications will appear here.</string>
+    <string name="placeholder_profile">Your profile will appear here.</string>
+
+    <!-- Feed -->
+    <string name="feed_tab_following">Following</string>
+    <string name="feed_tab_discover">Discover</string>
+    <string name="feed_empty_following_title">Your feed is quiet</string>
+    <string name="feed_empty_following_body">Follow other traders, or switch to Discover to see what people are posting.</string>
+    <string name="feed_empty_discover_title">No setups yet</string>
+    <string name="feed_empty_discover_body">Be the first to post a setup from the Post tab.</string>
+    <string name="error_feed_load">Could not load the feed.</string>
+    <string name="error_like_failed">Could not update your like.</string>
+    <string name="action_retry">Retry</string>
+
+    <!-- Create post -->
+    <string name="create_hint_ticker">Ticker</string>
+    <string name="create_label_setup">Setup type</string>
+    <string name="create_label_chart">Chart screenshot</string>
+    <string name="create_chart_empty">No chart selected</string>
+    <string name="create_action_pick_image">Choose chart image</string>
+    <string name="create_action_change_image">Change chart image</string>
+    <string name="create_hint_notes">Notes</string>
+    <string name="create_hint_tags">Tags (optional)</string>
+    <string name="create_helper_tags">Separate with commas, e.g. earnings, gap</string>
+    <string name="create_action_publish">Publish</string>
+    <string name="create_error_ticker_required">Enter a ticker.</string>
+    <string name="create_error_ticker_invalid">Use 1-6 letters, e.g. NVDA.</string>
+    <string name="create_error_chart_required">Choose a chart screenshot first.</string>
+    <string name="create_status_uploading">Uploading chart %1$d%%</string>
+    <string name="create_status_publishing">Publishing…</string>
+    <string name="create_error_upload_failed">Chart upload failed. Please try again.</string>
+    <string name="create_error_publish_failed">Could not publish your post.</string>
+    <string name="create_published">Post published.</string>
+    <string name="create_error_not_signed_in">You need to be signed in to post.</string>
+
+    <!-- Content descriptions -->
+    <string name="cd_author_avatar">Author profile picture</string>
+    <string name="cd_post_chart">Chart screenshot</string>
+    <string name="cd_app_logo">PivotBoard logo</string>
+    <string name="cd_splash_animation">Loading animation</string>
+
+    <!-- Toolbar menu / logout -->
+    <string name="menu_logout">Log out</string>
+    <string name="logout_confirm_title">Log out?</string>
+    <string name="logout_confirm_message">You will need to sign in again to post or comment.</string>
+    <string name="logout_confirm_yes">Log out</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="logout_done">Signed out.</string>
+    <string name="profile_restored">Your profile was restored.</string>
+
+    <!-- Generic errors -->
+    <string name="error_network">Network unavailable. Check your connection.</string>
+    <string name="error_generic">Something went wrong. Please try again.</string>
+</resources>

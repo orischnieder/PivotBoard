@@ -1,0 +1,21 @@
+*.iml
+.gradle
+/local.properties
+local.properties
+.idea/
+.DS_Store
+/build
+/app/build
+/captures
+.externalNativeBuild
+.cxx
+
+# Firebase config - provided locally, never committed
+google-services.json
+app/google-services.json
+
+# Signing material
+*.jks
+*.keystore
+keystore.properties
+*.bak
