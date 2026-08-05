@@ -20,6 +20,7 @@ import com.google.firebase.firestore.toObject
 import com.ori.pivotboard_project.model.Comment
 import com.ori.pivotboard_project.model.Post
 import com.ori.pivotboard_project.model.User
+import com.ori.pivotboard_project.model.WatchItem
 
 /**
  * The only class in the app that holds a [FirebaseFirestore] handle.
@@ -381,7 +382,100 @@ class DatabaseManager private constructor(context: Context) {
             }
     }
 
+    // ------------------------------------------------------------ Watchlist
+
+    /**
+     * A user's watchlist, newest first.
+     *
+     * [onlyPublic] is not cosmetic: the security rule allows a non-owner to read only
+     * entries where `isPublic == true`, and Firestore rejects an entire `list` query unless
+     * every document it could return is readable. Reading someone else's watchlist without
+     * this filter fails with PERMISSION_DENIED rather than returning a subset.
+     *
+     * Sorted client-side so `whereEqualTo` + `orderBy` never needs a composite index.
+     */
+    fun loadWatchlist(
+        uid: String,
+        onlyPublic: Boolean,
+        onResult: (items: List<WatchItem>?, error: Exception?) -> Unit
+    ) {
+        val query = if (onlyPublic) {
+            watchlistRef(uid).whereEqualTo(Constants.FIRESTORE.WATCH_IS_PUBLIC, true)
+        } else {
+            watchlistRef(uid)
+        }
+
+        query.get()
+            .addOnSuccessListener { snapshot ->
+                val items = snapshot.documents
+                    .mapNotNull { doc -> doc.toObject<WatchItem>()?.apply { id = doc.id } }
+                    .sortedByDescending { it.addedAt }
+                onResult(items, null)
+            }
+            .addOnFailureListener { e ->
+                logFirestoreFailure("load watchlist", e)
+                onResult(null, e)
+            }
+    }
+
+    /** The ticker is the document id, so adding one twice simply overwrites it. */
+    fun addWatchItem(uid: String, ticker: String, onResult: (success: Boolean) -> Unit) {
+        val item = WatchItem(
+            ticker = ticker,
+            isPublic = false,
+            addedAt = System.currentTimeMillis()
+        )
+        watchlistRef(uid).document(ticker).set(item)
+            .addOnSuccessListener { onResult(true) }
+            .addOnFailureListener { e ->
+                logFirestoreFailure("add watch item", e)
+                onResult(false)
+            }
+    }
+
+    fun setWatchItemPublic(
+        uid: String,
+        ticker: String,
+        isPublic: Boolean,
+        onResult: (success: Boolean) -> Unit
+    ) {
+        watchlistRef(uid).document(ticker)
+            .set(mapOf(Constants.FIRESTORE.WATCH_IS_PUBLIC to isPublic), SetOptions.merge())
+            .addOnSuccessListener { onResult(true) }
+            .addOnFailureListener { e ->
+                logFirestoreFailure("toggle watch item visibility", e)
+                onResult(false)
+            }
+    }
+
+    fun removeWatchItem(uid: String, ticker: String, onResult: (success: Boolean) -> Unit) {
+        watchlistRef(uid).document(ticker).delete()
+            .addOnSuccessListener { onResult(true) }
+            .addOnFailureListener { e ->
+                logFirestoreFailure("remove watch item", e)
+                onResult(false)
+            }
+    }
+
     // ---------------------------------------------------------------- Feed
+
+    /** Every post for one ticker, newest first. Sorted client-side, as above. */
+    fun loadPostsByTicker(
+        ticker: String,
+        onResult: (posts: List<Post>?, error: Exception?) -> Unit
+    ) {
+        postsRef
+            .whereEqualTo(Constants.FIRESTORE.POST_TICKER, ticker)
+            .limit(Constants.FEED.PAGE_SIZE)
+            .get()
+            .addOnSuccessListener { snapshot ->
+                onResult(snapshot.toPosts().sortedByDescending { it.createdAt }, null)
+            }
+            .addOnFailureListener { e ->
+                logFirestoreFailure("load posts by ticker", e)
+                onResult(null, e)
+            }
+    }
 
     /**
      * Discover: the newest posts across the whole app.

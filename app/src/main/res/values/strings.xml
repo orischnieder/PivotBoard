@@ -94,6 +94,30 @@
     <string name="profile_error_save">Could not save your profile.</string>
     <string name="profile_username_format">\@%1$s</string>
 
+    <!-- Watchlist -->
+    <string name="watchlist_title">Watchlist</string>
+    <string name="watchlist_title_other">%1$s\'s watchlist</string>
+    <string name="watchlist_hint_ticker">Add a ticker</string>
+    <string name="watchlist_action_add">Add</string>
+    <string name="watchlist_added_format">added %1$s</string>
+    <string name="watchlist_empty_own">Your watchlist is empty. Add a ticker to start tracking it.</string>
+    <string name="watchlist_empty_other">This trader has no public tickers.</string>
+    <string name="watchlist_error_load">Could not load the watchlist.</string>
+    <string name="watchlist_error_add">Could not add that ticker.</string>
+    <string name="watchlist_error_update">Could not change visibility.</string>
+    <string name="watchlist_error_remove">Could not remove that ticker.</string>
+    <string name="watchlist_removed">%1$s removed.</string>
+    <string name="watchlist_now_public">%1$s is now public.</string>
+    <string name="watchlist_now_private">%1$s is now private.</string>
+    <string name="watchlist_cd_public_toggle">Share this ticker publicly</string>
+    <string name="watchlist_cd_remove">Remove ticker</string>
+    <string name="watchlist_action_view">View watchlist</string>
+
+    <!-- Ticker posts -->
+    <string name="ticker_title">$%1$s</string>
+    <string name="ticker_empty">No setups posted for this ticker yet.</string>
+    <string name="ticker_error">Could not load posts for this ticker.</string>
+
     <!-- Content descriptions -->
     <string name="cd_author_avatar">Author profile picture</string>
     <string name="cd_post_chart">Chart screenshot</string>

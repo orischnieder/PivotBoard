@@ -187,6 +187,17 @@
                 app:cornerRadius="12dp"
                 tools:text="Follow" />
 
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/profile_BTN_watchlist"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="8dp"
+                android:minHeight="48dp"
+                android:text="@string/watchlist_action_view"
+                app:cornerRadius="12dp" />
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"

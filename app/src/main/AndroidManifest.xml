@@ -46,6 +46,16 @@
             android:exported="false"
             android:parentActivityName=".activities.MainActivity" />
 
+        <activity
+            android:name=".activities.WatchlistActivity"
+            android:exported="false"
+            android:parentActivityName=".activities.MainActivity" />
+
+        <activity
+            android:name=".activities.TickerPostsActivity"
+            android:exported="false"
+            android:parentActivityName=".activities.MainActivity" />
+
     </application>
 
 </manifest>

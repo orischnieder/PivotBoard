@@ -38,8 +38,14 @@ service cloud.firestore {
         allow write: if isSelf(followerUid);
       }
 
+      // The owner sees everything; everyone else sees only entries marked public.
+      //
+      // For a `list` query this is not a filter - Firestore denies the whole query unless
+      // every document it could return is readable. So a client reading someone else's
+      // watchlist MUST constrain the query with whereEqualTo("isPublic", true); see
+      // DatabaseManager.loadWatchlist.
       match /watchlist/{ticker} {
-        allow read: if isSelf(uid);
+        allow read: if isSelf(uid) || resource.data.isPublic == true;
         allow write: if isSelf(uid);
       }
 

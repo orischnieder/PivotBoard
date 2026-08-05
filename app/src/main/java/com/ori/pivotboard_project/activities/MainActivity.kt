@@ -125,7 +125,8 @@ class MainActivity : AppCompatActivity() {
     private fun fragmentFor(itemId: Int): Fragment? = when (itemId) {
         R.id.nav_feed -> FeedFragment()
         R.id.nav_create -> CreatePostFragment()
-        R.id.nav_watchlist -> WatchlistFragment()
+        // null uid: the Watchlist tab always shows the signed-in user's own list.
+        R.id.nav_watchlist -> WatchlistFragment.newInstance(null)
         R.id.nav_notifications -> NotificationsFragment()
         // null uid: the Profile tab always shows the signed-in user.
         R.id.nav_profile -> ProfileFragment.newInstance(null)

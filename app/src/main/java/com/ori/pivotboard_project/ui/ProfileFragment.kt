@@ -9,6 +9,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.ori.pivotboard_project.R
 import com.ori.pivotboard_project.activities.PostDetailActivity
+import com.ori.pivotboard_project.activities.TickerPostsActivity
+import com.ori.pivotboard_project.activities.WatchlistActivity
 import com.ori.pivotboard_project.adapters.PostAdapter
 import com.ori.pivotboard_project.databinding.DialogEditProfileBinding
 import com.ori.pivotboard_project.databinding.FragmentProfileBinding
@@ -62,6 +64,15 @@ class ProfileFragment : Fragment(), PostCallback {
 
         binding.profileBTNAction.setOnClickListener {
             if (isOwnProfile) showEditDialog() else toggleFollow()
+        }
+
+        binding.profileBTNWatchlist.setOnClickListener {
+            val user = profileUser ?: return@setOnClickListener
+            WatchlistActivity.start(
+                context = requireContext(),
+                uid = user.id,
+                ownerName = user.displayName.ifBlank { user.username }
+            )
         }
 
         loadProfile()
@@ -272,10 +283,11 @@ class ProfileFragment : Fragment(), PostCallback {
         postAdapter.notifyItemChanged(position)
     }
 
-    // Already on this author's profile; ticker search is section 5.6.
+    /** Already on this author's profile. */
     override fun onAuthorClicked(post: Post, position: Int) = Unit
 
-    override fun onTickerClicked(post: Post, position: Int) = Unit
+    override fun onTickerClicked(post: Post, position: Int) =
+        TickerPostsActivity.start(requireContext(), post.ticker)
 
     // -------------------------------------------------------------- States
 

@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.ori.pivotboard_project.R
 import com.ori.pivotboard_project.activities.PostDetailActivity
 import com.ori.pivotboard_project.activities.ProfileActivity
+import com.ori.pivotboard_project.activities.TickerPostsActivity
 import com.ori.pivotboard_project.adapters.PostAdapter
 import com.ori.pivotboard_project.databinding.FragmentPostListBinding
 import com.ori.pivotboard_project.interfaces.PostCallback
@@ -171,9 +172,8 @@ class PostListFragment : Fragment(), PostCallback {
     override fun onAuthorClicked(post: Post, position: Int) =
         ProfileActivity.start(requireContext(), post.authorId)
 
-    // Ticker search is section 5.6.
-
-    override fun onTickerClicked(post: Post, position: Int) = Unit
+    override fun onTickerClicked(post: Post, position: Int) =
+        TickerPostsActivity.start(requireContext(), post.ticker)
 
     override fun onDestroyView() {
         super.onDestroyView()
