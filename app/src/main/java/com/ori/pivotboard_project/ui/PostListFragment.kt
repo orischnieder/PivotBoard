@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ori.pivotboard_project.R
+import com.ori.pivotboard_project.activities.PostDetailActivity
 import com.ori.pivotboard_project.adapters.PostAdapter
 import com.ori.pivotboard_project.databinding.FragmentPostListBinding
 import com.ori.pivotboard_project.interfaces.PostCallback
@@ -157,11 +158,16 @@ class PostListFragment : Fragment(), PostCallback {
         adapter.notifyItemChanged(position)
     }
 
-    // Post detail, profile and ticker search are not built yet (sections 5.4 - 5.6).
-    override fun onPostClicked(post: Post, position: Int) = Unit
+    override fun onPostClicked(post: Post, position: Int) = openDetail(post)
 
-    override fun onCommentClicked(post: Post, position: Int) = Unit
+    /** The comment button opens the same screen - the comment box lives there. */
+    override fun onCommentClicked(post: Post, position: Int) = openDetail(post)
 
+    private fun openDetail(post: Post) {
+        PostDetailActivity.start(requireContext(), post.id)
+    }
+
+    // Profile and ticker search are not built yet (sections 5.5 - 5.6).
     override fun onAuthorClicked(post: Post, position: Int) = Unit
 
     override fun onTickerClicked(post: Post, position: Int) = Unit

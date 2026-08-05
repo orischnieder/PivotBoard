@@ -1,0 +1,275 @@
+package com.ori.pivotboard_project.activities
+
+import android.content.Context
+import android.content.Intent
+import android.content.res.ColorStateList
+import android.os.Bundle
+import android.view.View
+import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.color.MaterialColors
+import com.google.firebase.firestore.ListenerRegistration
+import com.ori.pivotboard_project.R
+import com.ori.pivotboard_project.adapters.CommentAdapter
+import com.ori.pivotboard_project.databinding.ActivityPostDetailBinding
+import com.ori.pivotboard_project.interfaces.CommentCallback
+import com.ori.pivotboard_project.model.Comment
+import com.ori.pivotboard_project.model.Post
+import com.ori.pivotboard_project.utilities.AuthManager
+import com.ori.pivotboard_project.utilities.Constants
+import com.ori.pivotboard_project.utilities.DatabaseManager
+import com.ori.pivotboard_project.utilities.ImageLoader
+import com.ori.pivotboard_project.utilities.SignalManager
+import com.ori.pivotboard_project.utilities.TimeFormatter
+
+/**
+ * Section 5.4 - the full post with its likes and comments.
+ *
+ * A drill-down screen rather than a bottom-nav tab, so it is its own Activity; the tab
+ * fragments stay owned by [MainActivity].
+ *
+ * Comments use a snapshot listener so a new comment appears without a manual refresh. The
+ * registration is removed in `onStop` to avoid leaking it.
+ */
+class PostDetailActivity : AppCompatActivity(), CommentCallback {
+
+    private lateinit var binding: ActivityPostDetailBinding
+    private val commentAdapter = CommentAdapter()
+
+    private var post: Post? = null
+    private var isLiked = false
+    private var commentsRegistration: ListenerRegistration? = null
+
+    private val postId: String
+        get() = intent.getStringExtra(Constants.BUNDLE_KEYS.POST_ID).orEmpty()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
+        binding = ActivityPostDetailBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
+
+        binding.detailTBToolbar.setNavigationOnClickListener { finish() }
+
+        commentAdapter.commentCallback = this
+        binding.detailRVComments.layoutManager = LinearLayoutManager(this)
+        binding.detailRVComments.adapter = commentAdapter
+
+        binding.detailBTNLike.setOnClickListener { toggleLike() }
+        binding.detailBTNSend.setOnClickListener { sendComment() }
+
+        if (postId.isEmpty()) {
+            showError()
+            return
+        }
+        loadPost()
+    }
+
+    /** Attached here rather than in onCreate so onStop can cleanly detach it. */
+    override fun onStart() {
+        super.onStart()
+        if (postId.isNotEmpty()) listenToComments()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        commentsRegistration?.remove()
+        commentsRegistration = null
+    }
+
+    // ------------------------------------------------------------- Loading
+
+    private fun loadPost() {
+        setLoading(true)
+        DatabaseManager.getInstance().loadPost(postId) { loaded, _ ->
+            if (isFinishing || isDestroyed) return@loadPost
+
+            if (loaded == null) {
+                showError()
+                return@loadPost
+            }
+            post = loaded
+            bindPost(loaded)
+            loadLikeState()
+            showContent()
+        }
+    }
+
+    private fun loadLikeState() {
+        val uid = AuthManager.getInstance().currentUid()
+        DatabaseManager.getInstance().fetchLikedPostIds(listOf(postId), uid) { likedIds ->
+            if (isFinishing || isDestroyed) return@fetchLikedPostIds
+            isLiked = likedIds.contains(postId)
+            bindLikeState()
+        }
+    }
+
+    private fun listenToComments() {
+        commentsRegistration = DatabaseManager.getInstance().listenToComments(
+            postId = postId,
+            onChange = { comments ->
+                if (isFinishing || isDestroyed) return@listenToComments
+                commentAdapter.setData(comments)
+                binding.detailLBLNoComments.visibility =
+                    if (comments.isEmpty()) View.VISIBLE else View.GONE
+                // The listener is the freshest source, so trust it over the stored counter.
+                bindCommentCount(comments.size)
+            },
+            onError = {
+                if (isFinishing || isDestroyed) return@listenToComments
+                SignalManager.getInstance().toast(R.string.detail_error_comments)
+            }
+        )
+    }
+
+    // ------------------------------------------------------------- Binding
+
+    private fun bindPost(post: Post) {
+        val imageLoader = ImageLoader.getInstance()
+
+        binding.detailLBLAuthor.text = post.authorName
+        binding.detailLBLTime.text = TimeFormatter.relative(post.createdAt)
+        binding.detailLBLTicker.text = post.ticker
+        binding.detailLBLSetup.text = post.setupType
+        binding.detailLBLNotes.text = post.notes
+        binding.detailLBLNotes.visibility = if (post.notes.isBlank()) View.GONE else View.VISIBLE
+
+        imageLoader.loadImage(post.authorPhotoUrl, binding.detailIMGAvatar)
+        imageLoader.loadImage(post.imageUrl, binding.detailIMGChart)
+
+        binding.detailLBLTags.apply {
+            text = post.tags.joinToString(" ") { "#$it" }
+            visibility = if (post.tags.isEmpty()) View.GONE else View.VISIBLE
+        }
+
+        bindCommentCount(post.commentCount.toInt())
+        bindLikeState()
+    }
+
+    private fun bindLikeState() {
+        val likeCount = post?.likeCount ?: 0
+        binding.detailBTNLike.text = likeCount.toString()
+        binding.detailBTNLike.setIconResource(
+            if (isLiked) R.drawable.ic_like_filled else R.drawable.ic_like
+        )
+        val tintAttr =
+            if (isLiked) androidx.appcompat.R.attr.colorPrimary
+            else com.google.android.material.R.attr.colorOnSurfaceVariant
+        binding.detailBTNLike.iconTint =
+            ColorStateList.valueOf(MaterialColors.getColor(binding.detailBTNLike, tintAttr))
+    }
+
+    private fun bindCommentCount(count: Int) {
+        binding.detailLBLCommentCount.text =
+            resources.getQuantityString(R.plurals.detail_comment_count, count, count)
+    }
+
+    // ------------------------------------------------------------- Actions
+
+    /** Optimistic, mirroring the feed: flip immediately, roll back if the write fails. */
+    private fun toggleLike() {
+        val post = this.post ?: return
+        val uid = AuthManager.getInstance().currentUid()
+        if (uid.isEmpty()) return
+
+        val wasLiked = isLiked
+        applyLikeLocally(!wasLiked)
+
+        DatabaseManager.getInstance().toggleLike(
+            post = post,
+            uid = uid,
+            fromName = AuthManager.getInstance().currentUser()?.displayName.orEmpty(),
+            shouldLike = !wasLiked
+        ) { success ->
+            if (isFinishing || isDestroyed) return@toggleLike
+            if (!success) {
+                applyLikeLocally(wasLiked)
+                SignalManager.getInstance().toast(R.string.error_like_failed)
+            }
+        }
+    }
+
+    private fun applyLikeLocally(liked: Boolean) {
+        val post = this.post ?: return
+        isLiked = liked
+        post.likeCount = (post.likeCount + if (liked) 1 else -1).coerceAtLeast(0)
+        bindLikeState()
+    }
+
+    private fun sendComment() {
+        val post = this.post ?: return
+        val uid = AuthManager.getInstance().currentUid()
+        if (uid.isEmpty()) {
+            SignalManager.getInstance().toast(R.string.create_error_not_signed_in)
+            return
+        }
+
+        val text = binding.detailEDTComment.text?.toString()?.trim().orEmpty()
+        if (text.isEmpty()) {
+            SignalManager.getInstance().toast(R.string.detail_comment_empty)
+            return
+        }
+
+        val currentUser = AuthManager.getInstance().currentUser()
+        val comment = Comment(
+            authorId = uid,
+            authorName = currentUser?.displayName?.takeIf { it.isNotBlank() }
+                ?: currentUser?.email?.substringBefore('@').orEmpty(),
+            text = text,
+            createdAt = System.currentTimeMillis()
+        )
+
+        binding.detailBTNSend.isEnabled = false
+        DatabaseManager.getInstance().addComment(postId, post.authorId, comment) { success ->
+            if (isFinishing || isDestroyed) return@addComment
+            binding.detailBTNSend.isEnabled = true
+
+            if (success) {
+                // The snapshot listener renders the new comment; just clear the field.
+                binding.detailEDTComment.text = null
+            } else {
+                SignalManager.getInstance().toast(R.string.detail_error_comment_failed)
+            }
+        }
+    }
+
+    // Profile is not built yet (section 5.5).
+    override fun onCommentAuthorClicked(comment: Comment, position: Int) = Unit
+
+    // --------------------------------------------------------------- States
+
+    private fun setLoading(loading: Boolean) {
+        binding.detailPRGLoading.visibility = if (loading) View.VISIBLE else View.GONE
+    }
+
+    private fun showContent() {
+        setLoading(false)
+        binding.detailLAYContent.visibility = View.VISIBLE
+        binding.detailLAYCompose.visibility = View.VISIBLE
+        binding.detailLBLError.visibility = View.GONE
+    }
+
+    private fun showError() {
+        setLoading(false)
+        binding.detailLAYContent.visibility = View.GONE
+        binding.detailLAYCompose.visibility = View.GONE
+        binding.detailLBLError.visibility = View.VISIBLE
+    }
+
+    companion object {
+        fun start(context: Context, postId: String) {
+            val intent = Intent(context, PostDetailActivity::class.java)
+                .putExtra(Constants.BUNDLE_KEYS.POST_ID, postId)
+            context.startActivity(intent)
+        }
+    }
+}

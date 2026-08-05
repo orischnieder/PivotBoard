@@ -58,6 +58,21 @@
     <string name="create_published">Post published.</string>
     <string name="create_error_not_signed_in">You need to be signed in to post.</string>
 
+    <!-- Post detail -->
+    <string name="detail_title">Post</string>
+    <string name="detail_comments_header">Comments</string>
+    <string name="detail_no_comments">No comments yet. Start the discussion.</string>
+    <string name="detail_hint_comment">Add a comment</string>
+    <string name="detail_action_send">Send comment</string>
+    <string name="detail_error_load">This post could not be loaded. It may have been deleted.</string>
+    <string name="detail_error_comments">Could not load comments.</string>
+    <string name="detail_error_comment_failed">Could not post your comment.</string>
+    <string name="detail_comment_empty">Write something first.</string>
+    <plurals name="detail_comment_count">
+        <item quantity="one">%d comment</item>
+        <item quantity="other">%d comments</item>
+    </plurals>
+
     <!-- Content descriptions -->
     <string name="cd_author_avatar">Author profile picture</string>
     <string name="cd_post_chart">Chart screenshot</string>

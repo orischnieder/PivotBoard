@@ -11,11 +11,13 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
+import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.toObject
+import com.ori.pivotboard_project.model.Comment
 import com.ori.pivotboard_project.model.Post
 import com.ori.pivotboard_project.model.User
 
@@ -168,6 +170,85 @@ class DatabaseManager private constructor(context: Context) {
             .addOnFailureListener { e ->
                 logFirestoreFailure("create post", e)
                 onResult(null, e)
+            }
+    }
+
+    /** A single post, for the detail screen. Null result means the post no longer exists. */
+    fun loadPost(postId: String, onResult: (post: Post?, error: Exception?) -> Unit) {
+        postDoc(postId).get()
+            .addOnSuccessListener { doc ->
+                val post = if (doc.exists()) doc.toObject<Post>()?.apply { id = doc.id } else null
+                onResult(post, null)
+            }
+            .addOnFailureListener { e ->
+                logFirestoreFailure("load post", e)
+                onResult(null, e)
+            }
+    }
+
+    // ------------------------------------------------------------- Comments
+
+    /**
+     * Live comments, oldest first. Ordering on a single field inside the subcollection, so
+     * no composite index is required.
+     *
+     * Returns the [ListenerRegistration] so the caller can remove it - see section 8.
+     */
+    fun listenToComments(
+        postId: String,
+        onChange: (comments: List<Comment>) -> Unit,
+        onError: (error: Exception) -> Unit
+    ): ListenerRegistration =
+        commentsRef(postId)
+            .orderBy(Constants.FIRESTORE.COMMENT_CREATED_AT, Query.Direction.ASCENDING)
+            .addSnapshotListener { snapshot, e ->
+                if (e != null) {
+                    logFirestoreFailure("comments listener", e)
+                    onError(e)
+                    return@addSnapshotListener
+                }
+                val comments = snapshot?.documents?.mapNotNull { doc ->
+                    doc.toObject<Comment>()?.apply { id = doc.id }
+                } ?: emptyList()
+                onChange(comments)
+            }
+
+    /**
+     * Writes a comment and bumps the post's `commentCount` in one batch.
+     *
+     * `update` on the post is deliberate here: a comment on a post that no longer exists
+     * should fail rather than resurrect a phantom document.
+     */
+    fun addComment(
+        postId: String,
+        postAuthorId: String,
+        comment: Comment,
+        onResult: (success: Boolean) -> Unit
+    ) {
+        val newCommentRef = commentsRef(postId).document()
+
+        val batch = db.batch()
+        batch.set(newCommentRef, comment)
+        batch.update(
+            postDoc(postId),
+            Constants.FIRESTORE.POST_COMMENT_COUNT,
+            FieldValue.increment(1)
+        )
+
+        batch.commit()
+            .addOnSuccessListener {
+                addNotification(
+                    toUid = postAuthorId,
+                    type = Constants.NOTIFICATION_TYPE.COMMENT,
+                    fromUid = comment.authorId,
+                    fromName = comment.authorName,
+                    postId = postId
+                )
+                onResult(true)
+            }
+            .addOnFailureListener { e ->
+                logFirestoreFailure("add comment", e)
+                onResult(false)
             }
     }
 
