@@ -202,5 +202,12 @@ Denormalized counters are kept in step with batched writes and `FieldValue.incre
 - **No Lottie animation asset.** The splash screen shows the static logo; drop a JSON at
   `res/raw/splash_animation.json` and enable `splash_LOTTIE_animation` to use one.
 - **The app logo is a placeholder** vector, not final artwork.
+- **User search is not implemented.** Search covers posts by ticker (prefix match) and by
+  tag (exact match), but there is no "People" tab for finding traders by name or username.
+  Users are reachable by tapping an author anywhere in the app, or through the followers /
+  following lists. `UserAdapter` and `UserCallback` already exist, so adding a People tab
+  would mean one prefix query on `username` plus a third filter chip.
+- **Tag search is an exact match.** Firestore's `arrayContains` cannot do prefixes, so
+  `earn` will not find `earnings`. Ticker search *is* a prefix match.
 - Reading which posts the current user has liked costs one read per post; fine at the
   current page size, but worth revisiting if the feed ever paginates deeply.

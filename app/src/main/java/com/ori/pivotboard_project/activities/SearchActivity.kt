@@ -34,7 +34,13 @@ class SearchActivity : AppCompatActivity(), PostCallback {
     private lateinit var binding: ActivitySearchBinding
     private val postAdapter = PostAdapter()
 
-    private var mode = Mode.TICKER
+    /**
+     * Derived from the chip rather than stored, so it can never disagree with what the user
+     * sees after the ChipGroup restores its own state on rotation.
+     */
+    private val mode: Mode
+        get() = if (binding.searchCHIPTag.isChecked) Mode.TAG else Mode.TICKER
+
     private var lastQuery = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,14 +66,23 @@ class SearchActivity : AppCompatActivity(), PostCallback {
     }
 
     private fun initFilters() {
-        binding.searchLAYFilters.setOnCheckedStateChangeListener { _, checkedIds ->
-            mode = if (checkedIds.firstOrNull() == R.id.search_CHIP_tag) Mode.TAG else Mode.TICKER
+        binding.searchLAYFilters.setOnCheckedStateChangeListener { _, _ ->
             binding.searchLAYQuery.hint = getString(
                 if (mode == Mode.TAG) R.string.search_hint_tag else R.string.search_hint_ticker
             )
             // Re-run so switching mode reinterprets what is already typed.
             if (lastQuery.isNotEmpty()) runSearch()
         }
+    }
+
+    /**
+     * Results are not view state, so a rotation would drop them and fall back to the idle
+     * prompt. Re-running here - after the views have restored - keeps the screen coherent.
+     */
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        if (binding.searchEDTQuery.text?.toString()?.trim().isNullOrEmpty()) return
+        runSearch()
     }
 
     private fun initQueryField() {

@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import com.ori.pivotboard_project.R
 import com.ori.pivotboard_project.databinding.FragmentCreatePostBinding
@@ -62,10 +63,21 @@ class CreatePostFragment : Fragment() {
         }
         binding.createBTNPublish.setOnClickListener { publish() }
 
+        // The picked image is not part of any view's saved state, so it has to be restored
+        // by hand or a rotation would silently clear the chart preview.
+        savedInstanceState?.getString(STATE_IMAGE_URI)
+            ?.takeIf { it.isNotEmpty() }
+            ?.let { showSelectedImage(it.toUri()) }
+
         // Clearing the error as soon as the user edits is friendlier than leaving it up.
         binding.createEDTTicker.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) binding.createLAYTicker.error = null
         }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString(STATE_IMAGE_URI, selectedImageUri?.toString().orEmpty())
     }
 
     private fun initSetupSpinner() {
@@ -257,6 +269,7 @@ class CreatePostFragment : Fragment() {
     }
 
     companion object {
+        private const val STATE_IMAGE_URI = "STATE_IMAGE_URI"
         private const val DEFAULT_AUTHOR_NAME = "Trader"
         private val TICKER_PATTERN = Regex("^[A-Z]{1,${Constants.UI.TICKER_MAX_LENGTH}}$")
     }
