@@ -10,6 +10,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.firebase.firestore.ListenerRegistration
 import com.ori.pivotboard_project.R
 import com.ori.pivotboard_project.databinding.ActivityMainBinding
 import com.ori.pivotboard_project.ui.CreatePostFragment
@@ -29,6 +30,7 @@ import com.ori.pivotboard_project.utilities.SignalManager
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private var unreadRegistration: ListenerRegistration? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,6 +56,26 @@ class MainActivity : AppCompatActivity() {
         if (savedInstanceState == null) {
             showFragment(FeedFragment())
         }
+    }
+
+    /** Live unread badge on the Alerts tab; detached in onStop so it cannot leak. */
+    override fun onStart() {
+        super.onStart()
+        val uid = AuthManager.getInstance().currentUid()
+        if (uid.isEmpty()) return
+
+        unreadRegistration = DatabaseManager.getInstance().listenToUnreadCount(uid) { count ->
+            if (isFinishing || isDestroyed) return@listenToUnreadCount
+            val badge = binding.mainNAVBottom.getOrCreateBadge(R.id.nav_notifications)
+            badge.isVisible = count > 0
+            badge.number = count
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        unreadRegistration?.remove()
+        unreadRegistration = null
     }
 
     /**

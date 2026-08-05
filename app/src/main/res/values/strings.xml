@@ -113,6 +113,18 @@
     <string name="watchlist_cd_remove">Remove ticker</string>
     <string name="watchlist_action_view">View watchlist</string>
 
+    <!-- Notifications -->
+    <string name="notif_like">%1$s liked your post</string>
+    <string name="notif_comment">%1$s commented on your post</string>
+    <string name="notif_follow">%1$s started following you</string>
+    <string name="notif_unknown">%1$s interacted with your activity</string>
+    <string name="notif_someone">Someone</string>
+    <string name="notif_empty">No notifications yet. Likes, comments and new followers show up here.</string>
+    <string name="notif_error">Could not load your notifications.</string>
+    <string name="notif_mark_all_read">Mark all as read</string>
+    <string name="notif_all_read">All caught up.</string>
+    <string name="notif_error_mark_read">Could not mark them as read.</string>
+
     <!-- Followers / following list -->
     <string name="userlist_empty_followers">No followers yet.</string>
     <string name="userlist_empty_following">Not following anyone yet.</string>

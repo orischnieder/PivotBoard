@@ -18,6 +18,7 @@ import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.toObject
+import com.ori.pivotboard_project.model.AppNotification
 import com.ori.pivotboard_project.model.Comment
 import com.ori.pivotboard_project.model.Post
 import com.ori.pivotboard_project.model.User
@@ -688,6 +689,86 @@ class DatabaseManager private constructor(context: Context) {
                 onResult(true)
             }
             .addOnFailureListener { onResult(false) }
+    }
+
+    // -------------------------------------------------------- Notifications
+
+    /**
+     * Live notifications, newest first. Ordering on a single field, so no composite index.
+     * Returns the [ListenerRegistration] so the caller can remove it.
+     */
+    fun listenToNotifications(
+        uid: String,
+        onChange: (notifications: List<AppNotification>) -> Unit,
+        onError: (error: Exception) -> Unit
+    ): ListenerRegistration =
+        notificationsRef(uid)
+            .orderBy(Constants.FIRESTORE.NOTIF_CREATED_AT, Query.Direction.DESCENDING)
+            .limit(Constants.FEED.PAGE_SIZE)
+            .addSnapshotListener { snapshot, e ->
+                if (e != null) {
+                    logFirestoreFailure("notifications listener", e)
+                    onError(e)
+                    return@addSnapshotListener
+                }
+                val notifications = snapshot?.documents?.mapNotNull { doc ->
+                    doc.toObject<AppNotification>()?.apply { id = doc.id }
+                } ?: emptyList()
+                onChange(notifications)
+            }
+
+    /**
+     * Live unread count, for the bottom-navigation badge.
+     *
+     * Filters on `read` only - adding an orderBy on a different field here would require a
+     * composite index, and a count needs no ordering.
+     */
+    fun listenToUnreadCount(
+        uid: String,
+        onChange: (count: Int) -> Unit
+    ): ListenerRegistration =
+        notificationsRef(uid)
+            .whereEqualTo(Constants.FIRESTORE.NOTIF_READ, false)
+            .addSnapshotListener { snapshot, e ->
+                if (e != null) {
+                    logFirestoreFailure("unread count listener", e)
+                    return@addSnapshotListener
+                }
+                onChange(snapshot?.size() ?: 0)
+            }
+
+    fun markNotificationRead(uid: String, notificationId: String) {
+        notificationsRef(uid).document(notificationId)
+            .update(Constants.FIRESTORE.NOTIF_READ, true)
+            .addOnFailureListener { logFirestoreFailure("mark notification read", it) }
+    }
+
+    /** One batch, so the badge clears in a single snapshot rather than ticking down. */
+    fun markAllNotificationsRead(
+        uid: String,
+        notificationIds: List<String>,
+        onResult: (success: Boolean) -> Unit
+    ) {
+        if (notificationIds.isEmpty()) {
+            onResult(true)
+            return
+        }
+
+        val batch = db.batch()
+        notificationIds.forEach { id ->
+            batch.update(
+                notificationsRef(uid).document(id),
+                Constants.FIRESTORE.NOTIF_READ,
+                true
+            )
+        }
+
+        batch.commit()
+            .addOnSuccessListener { onResult(true) }
+            .addOnFailureListener { e ->
+                logFirestoreFailure("mark all notifications read", e)
+                onResult(false)
+            }
     }
 
     /** Fire-and-forget: a failed notification must never fail the action that caused it. */
