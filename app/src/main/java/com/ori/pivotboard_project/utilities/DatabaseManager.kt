@@ -520,6 +520,59 @@ class DatabaseManager private constructor(context: Context) {
 
     // ---------------------------------------------------------------- Feed
 
+    // ---------------------------------------------------------------- Search
+
+    /**
+     * Posts whose ticker starts with [prefix].
+     *
+     * Firestore has no full-text search, so this is a range scan: order by ticker and take
+     * everything from the prefix up to the same prefix plus a very high code point, which is
+     * the standard "starts with" idiom. Ordering on the single field it filters, so no
+     * composite index; the newest-first sort is applied client-side afterwards.
+     */
+    fun searchPostsByTicker(
+        prefix: String,
+        onResult: (posts: List<Post>?, error: Exception?) -> Unit
+    ) {
+        val query = prefix.uppercase()
+        postsRef
+            .orderBy(Constants.FIRESTORE.POST_TICKER)
+            .startAt(query)
+            .endAt(query + PREFIX_SEARCH_TERMINATOR)
+            .limit(Constants.FEED.PAGE_SIZE)
+            .get()
+            .addOnSuccessListener { snapshot ->
+                onResult(snapshot.toPosts().sortedByDescending { it.createdAt }, null)
+            }
+            .addOnFailureListener { e ->
+                logFirestoreFailure("search by ticker", e)
+                onResult(null, e)
+            }
+    }
+
+    /**
+     * Posts carrying [tag]. Tags are stored lowercase without the leading '#', so the query
+     * is normalized the same way. This is an exact match - `arrayContains` cannot do
+     * prefixes.
+     */
+    fun searchPostsByTag(
+        tag: String,
+        onResult: (posts: List<Post>?, error: Exception?) -> Unit
+    ) {
+        val query = tag.trim().removePrefix("#").lowercase()
+        postsRef
+            .whereArrayContains(Constants.FIRESTORE.POST_TAGS, query)
+            .limit(Constants.FEED.PAGE_SIZE)
+            .get()
+            .addOnSuccessListener { snapshot ->
+                onResult(snapshot.toPosts().sortedByDescending { it.createdAt }, null)
+            }
+            .addOnFailureListener { e ->
+                logFirestoreFailure("search by tag", e)
+                onResult(null, e)
+            }
+    }
+
     /** Every post for one ticker, newest first. Sorted client-side, as above. */
     fun loadPostsByTicker(
         ticker: String,
@@ -806,6 +859,14 @@ class DatabaseManager private constructor(context: Context) {
 
     companion object {
         private const val TAG = "PivotBoardDB"
+
+        /**
+         * Private-use code point U+F8FF (invisible in most editors). It sorts after any
+         * character a ticker can contain, so appending it to the end of an ordered range
+         * turns that range into a "starts with" query - the standard Firestore idiom for
+         * prefix search, which the API has no direct operator for.
+         */
+        private const val PREFIX_SEARCH_TERMINATOR = ""
 
         @Volatile
         private var instance: DatabaseManager? = null

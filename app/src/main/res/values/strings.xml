@@ -113,6 +113,17 @@
     <string name="watchlist_cd_remove">Remove ticker</string>
     <string name="watchlist_action_view">View watchlist</string>
 
+    <!-- Search -->
+    <string name="search_title">Search</string>
+    <string name="search_action">Search</string>
+    <string name="search_hint_ticker">Ticker, e.g. NVDA</string>
+    <string name="search_hint_tag">Tag, e.g. earnings</string>
+    <string name="search_filter_ticker">Ticker</string>
+    <string name="search_filter_tag">Tag</string>
+    <string name="search_idle">Search setups by ticker or tag.</string>
+    <string name="search_no_results">No setups found for \"%1$s\".</string>
+    <string name="search_error">Search failed. Please try again.</string>
+
     <!-- Notifications -->
     <string name="notif_like">%1$s liked your post</string>
     <string name="notif_comment">%1$s commented on your post</string>

@@ -104,6 +104,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
+        R.id.main_MNU_search -> {
+            SearchActivity.start(this)
+            true
+        }
+
         R.id.main_MNU_logout -> {
             confirmLogout()
             true
