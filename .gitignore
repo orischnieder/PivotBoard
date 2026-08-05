@@ -9,6 +9,7 @@ local.properties
 /captures
 .externalNativeBuild
 .cxx
+CLAUDE.md
 
 # Firebase config - provided locally, never committed
 google-services.json
