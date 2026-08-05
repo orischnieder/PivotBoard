@@ -113,6 +113,11 @@
     <string name="watchlist_cd_remove">Remove ticker</string>
     <string name="watchlist_action_view">View watchlist</string>
 
+    <!-- Followers / following list -->
+    <string name="userlist_empty_followers">No followers yet.</string>
+    <string name="userlist_empty_following">Not following anyone yet.</string>
+    <string name="userlist_error">Could not load this list.</string>
+
     <!-- Ticker posts -->
     <string name="ticker_title">$%1$s</string>
     <string name="ticker_empty">No setups posted for this ticker yet.</string>

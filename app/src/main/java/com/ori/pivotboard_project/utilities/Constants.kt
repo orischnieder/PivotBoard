@@ -83,6 +83,7 @@ object Constants {
         const val POST_ID = "POST_ID"
         const val USER_ID = "USER_ID"
         const val TICKER = "TICKER"
+        const val LIST_MODE = "LIST_MODE"
     }
 
     object FEED {

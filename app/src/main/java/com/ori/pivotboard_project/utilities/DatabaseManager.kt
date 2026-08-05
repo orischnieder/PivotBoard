@@ -8,6 +8,7 @@ import com.google.firebase.Firebase
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
@@ -177,7 +178,66 @@ class DatabaseManager private constructor(context: Context) {
             }
     }
 
+    /**
+     * Profiles for a set of uids, fetched in `whereIn` chunks.
+     *
+     * Firestore caps `whereIn` at 30 values, so this mirrors the Following feed: query in
+     * chunks, merge, and order the result to match [uids] rather than trusting query order.
+     */
+    fun loadUsersByIds(uids: List<String>, onResult: (users: List<User>) -> Unit) {
+        if (uids.isEmpty()) {
+            onResult(emptyList())
+            return
+        }
+
+        val chunkQueries = uids
+            .chunked(Constants.FEED.WHERE_IN_CHUNK)
+            .map { chunk -> usersRef.whereIn(FieldPath.documentId(), chunk).get() }
+
+        Tasks.whenAllSuccess<QuerySnapshot>(chunkQueries)
+            .addOnSuccessListener { snapshots ->
+                val byId = snapshots
+                    .flatMap { it.documents }
+                    .mapNotNull { doc -> doc.toObject<User>()?.apply { id = doc.id } }
+                    .associateBy { it.id }
+                // Keep the caller's ordering; a uid whose profile is missing is skipped.
+                onResult(uids.mapNotNull { byId[it] })
+            }
+            .addOnFailureListener { e ->
+                logFirestoreFailure("load users by ids", e)
+                onResult(emptyList())
+            }
+    }
+
     // --------------------------------------------------------- Follow graph
+
+    /**
+     * The people following [uid], or the people [uid] follows, as full profiles.
+     *
+     * Two hops on purpose: the subcollections store only edges (the document id is the
+     * other user's uid), so the profiles come from a second lookup.
+     */
+    fun loadFollowList(
+        uid: String,
+        followers: Boolean,
+        onResult: (users: List<User>?, error: Exception?) -> Unit
+    ) {
+        val edgesRef = if (followers) followersRef(uid) else followingRef(uid)
+
+        edgesRef.get()
+            .addOnSuccessListener { snapshot ->
+                val ids = snapshot.documents.map { it.id }
+                if (ids.isEmpty()) {
+                    onResult(emptyList(), null)
+                    return@addOnSuccessListener
+                }
+                loadUsersByIds(ids) { users -> onResult(users, null) }
+            }
+            .addOnFailureListener { e ->
+                logFirestoreFailure(if (followers) "load followers" else "load following", e)
+                onResult(null, e)
+            }
+    }
 
     fun isFollowing(uid: String, targetUid: String, onResult: (following: Boolean) -> Unit) {
         if (uid.isEmpty() || targetUid.isEmpty()) {

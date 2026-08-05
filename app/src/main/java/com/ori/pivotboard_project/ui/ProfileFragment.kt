@@ -10,6 +10,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.ori.pivotboard_project.R
 import com.ori.pivotboard_project.activities.PostDetailActivity
 import com.ori.pivotboard_project.activities.TickerPostsActivity
+import com.ori.pivotboard_project.activities.UserListActivity
 import com.ori.pivotboard_project.activities.WatchlistActivity
 import com.ori.pivotboard_project.adapters.PostAdapter
 import com.ori.pivotboard_project.databinding.DialogEditProfileBinding
@@ -64,6 +65,13 @@ class ProfileFragment : Fragment(), PostCallback {
 
         binding.profileBTNAction.setOnClickListener {
             if (isOwnProfile) showEditDialog() else toggleFollow()
+        }
+
+        binding.profileLAYFollowers.setOnClickListener {
+            openFollowList(UserListActivity.Mode.FOLLOWERS)
+        }
+        binding.profileLAYFollowing.setOnClickListener {
+            openFollowList(UserListActivity.Mode.FOLLOWING)
         }
 
         binding.profileBTNWatchlist.setOnClickListener {
@@ -142,6 +150,11 @@ class ProfileFragment : Fragment(), PostCallback {
             isFollowing = following
             bindActionButton()
         }
+    }
+
+    private fun openFollowList(mode: UserListActivity.Mode) {
+        val user = profileUser ?: return
+        UserListActivity.start(requireContext(), user.id, mode)
     }
 
     // ------------------------------------------------------------- Binding

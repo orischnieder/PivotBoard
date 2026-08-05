@@ -56,6 +56,11 @@
             android:exported="false"
             android:parentActivityName=".activities.MainActivity" />
 
+        <activity
+            android:name=".activities.UserListActivity"
+            android:exported="false"
+            android:parentActivityName=".activities.MainActivity" />
+
     </application>
 
 </manifest>
