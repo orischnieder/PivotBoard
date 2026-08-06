@@ -1,0 +1,41 @@
+rules_version = '2';
+
+// PivotBoard Cloud Storage security rules.
+// Publish from the Firebase console (Storage -> Rules) - this file is not deployed
+// automatically, and it is separate from firestore.rules.
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    // Uploads are named "<uid>_<uuid>" (see StorageManager.uploadImage), so ownership is
+    // encoded in the filename prefix rather than in a folder.
+    function isOwner(fileName) {
+      return isSignedIn() && fileName.matches(request.auth.uid + '_.*');
+    }
+
+    match /images/{fileName} {
+      // Open to any signed-in user: chart images and avatars appear in everyone's feed,
+      // so a reader is almost never the uploader.
+      allow read: if isSignedIn();
+
+      // Only the uploader may add or replace their own file. The size and content-type
+      // checks stop the bucket being used as general-purpose storage.
+      // `request.resource` only exists for create/update, which is why delete is separate.
+      allow create, update: if isOwner(fileName)
+                            && request.resource.size < 10 * 1024 * 1024
+                            && request.resource.contentType.matches('image/.*');
+
+      // Deleting happens when a post is removed or an avatar is replaced.
+      allow delete: if isOwner(fileName);
+    }
+
+    // Nothing outside images/ is reachable. Storage denies by default, so this is
+    // documentation of intent as much as enforcement.
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

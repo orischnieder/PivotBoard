@@ -142,20 +142,13 @@ The app will **not build** without `app/google-services.json`, and that file is
    A release/signed build uses a different certificate and needs its own SHA-1 added too.
 6. **Create the Firestore database** (start in test mode for development).
 7. **Create the Cloud Storage bucket** — required for chart uploads.
-8. **Publish the security rules.**
-   - Firestore: paste the contents of [`firestore.rules`](firestore.rules) into
-     *Firestore Database → Rules* and publish.
-   - Storage has **separate** rules that default to deny. Paste into *Storage → Rules*:
-     ```
-     rules_version = '2';
-     service firebase.storage {
-       match /b/{bucket}/o {
-         match /images/{imageId} {
-           allow read, write: if request.auth != null;
-         }
-       }
-     }
-     ```
+8. **Publish the security rules.** Firestore and Storage have **separate** rule sets; both
+   must be published, and neither is deployed automatically by the app.
+   - Firestore: paste [`firestore.rules`](firestore.rules) into *Firestore Database → Rules*.
+   - Storage: paste [`storage.rules`](storage.rules) into *Storage → Rules*.
+
+   Uploads are named `<uid>_<uuid>`, so the Storage rules use that filename prefix to let a
+   user replace or delete only their own images while anyone signed in can view them.
 
 Firestore test-mode rules expire after 30 days; once they lapse every read is denied, which
 looks like an app bug rather than a rules problem.
