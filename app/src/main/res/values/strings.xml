@@ -113,6 +113,15 @@
     <string name="watchlist_cd_remove">Remove ticker</string>
     <string name="watchlist_action_view">View watchlist</string>
 
+    <!-- Post actions -->
+    <string name="post_cd_menu">Post options</string>
+    <string name="post_action_delete">Delete post</string>
+    <string name="post_delete_title">Delete this post?</string>
+    <string name="post_delete_message">The post, its chart image, and all of its likes and comments will be permanently removed.</string>
+    <string name="post_delete_confirm">Delete</string>
+    <string name="post_deleted">Post deleted.</string>
+    <string name="post_delete_failed">Could not delete the post. Please try again.</string>
+
     <!-- Search -->
     <string name="search_title">Search</string>
     <string name="search_action">Search</string>

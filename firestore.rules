@@ -14,6 +14,15 @@ service cloud.firestore {
       return isSignedIn() && request.auth.uid == uid;
     }
 
+    // Deleting a post has to remove comments and likes written by *other* people, so those
+    // child documents are also deletable by the post's author. Costs one document read per
+    // rule evaluation, which only happens on the delete path.
+    function isPostAuthor(postId) {
+      return isSignedIn()
+             && exists(/databases/$(database)/documents/posts/$(postId))
+             && get(/databases/$(database)/documents/posts/$(postId)).data.authorId == request.auth.uid;
+    }
+
     // Profiles are public to signed-in users; only the owner may write their own document,
     // with one exception: following someone increments `followersCount` on their document,
     // so that single key is writable by any signed-in user.
@@ -71,13 +80,16 @@ service cloud.firestore {
         allow read: if isSignedIn();
         allow create: if isSignedIn()
                       && request.resource.data.authorId == request.auth.uid;
-        allow update, delete: if isSelf(resource.data.authorId);
+        allow update: if isSelf(resource.data.authorId);
+        // The comment's author, or the post's author cleaning up on delete.
+        allow delete: if isSelf(resource.data.authorId) || isPostAuthor(postId);
       }
 
       // Presence of the document is the like; the doc id is the liker's uid.
       match /likes/{uid} {
         allow read: if isSignedIn();
-        allow write: if isSelf(uid);
+        allow create, update: if isSelf(uid);
+        allow delete: if isSelf(uid) || isPostAuthor(postId);
       }
     }
   }

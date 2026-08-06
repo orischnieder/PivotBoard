@@ -67,14 +67,34 @@ class StorageManager private constructor(context: Context) {
         )
     }
 
+    /**
+     * Deletes a previously uploaded image by its download url.
+     *
+     * [getReferenceFromUrl] throws on anything that is not a Firebase Storage url - a post
+     * seeded by hand in the console can easily carry an arbitrary one - so the call is
+     * guarded rather than allowed to take down the caller.
+     */
     fun deleteImage(downloadUrl: String, onComplete: ((success: Boolean) -> Unit)? = null) {
         if (downloadUrl.isBlank()) {
             onComplete?.invoke(false)
             return
         }
-        Firebase.storage.getReferenceFromUrl(downloadUrl)
-            .delete()
-            .addOnCompleteListener { onComplete?.invoke(it.isSuccessful) }
+
+        val reference = try {
+            Firebase.storage.getReferenceFromUrl(downloadUrl)
+        } catch (e: IllegalArgumentException) {
+            Log.w(TAG, "not a Firebase Storage url, nothing to delete: ${e.message}")
+            onComplete?.invoke(false)
+            return
+        }
+
+        reference.delete()
+            .addOnCompleteListener { task ->
+                if (!task.isSuccessful) {
+                    task.exception?.let { logStorageFailure("delete image", it) }
+                }
+                onComplete?.invoke(task.isSuccessful)
+            }
     }
 
     companion object {

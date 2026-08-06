@@ -11,6 +11,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.color.MaterialColors
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.firestore.ListenerRegistration
 import com.ori.pivotboard_project.R
 import com.ori.pivotboard_project.adapters.CommentAdapter
@@ -59,6 +60,15 @@ class PostDetailActivity : AppCompatActivity(), CommentCallback {
         }
 
         binding.detailTBToolbar.setNavigationOnClickListener { finish() }
+        binding.detailTBToolbar.inflateMenu(R.menu.post_detail_menu)
+        binding.detailTBToolbar.setOnMenuItemClickListener { item ->
+            if (item.itemId == R.id.detail_MNU_delete) {
+                confirmDelete()
+                true
+            } else {
+                false
+            }
+        }
 
         commentAdapter.commentCallback = this
         binding.detailRVComments.layoutManager = LinearLayoutManager(this)
@@ -104,6 +114,9 @@ class PostDetailActivity : AppCompatActivity(), CommentCallback {
                 return@loadPost
             }
             post = loaded
+            // The delete action only exists for the author.
+            binding.detailTBToolbar.menu.findItem(R.id.detail_MNU_delete)?.isVisible =
+                loaded.authorId == AuthManager.getInstance().currentUid()
             bindPost(loaded)
             loadLikeState()
             showContent()
@@ -250,6 +263,31 @@ class PostDetailActivity : AppCompatActivity(), CommentCallback {
 
     override fun onCommentAuthorClicked(comment: Comment, position: Int) =
         ProfileActivity.start(this, comment.authorId)
+
+    private fun confirmDelete() {
+        MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.post_delete_title)
+            .setMessage(R.string.post_delete_message)
+            .setNegativeButton(R.string.action_cancel, null)
+            .setPositiveButton(R.string.post_delete_confirm) { _, _ -> deletePost() }
+            .show()
+    }
+
+    private fun deletePost() {
+        val post = this.post ?: return
+
+        DatabaseManager.getInstance().deletePost(post) { success ->
+            if (isFinishing || isDestroyed) return@deletePost
+
+            if (success) {
+                SignalManager.getInstance().toast(R.string.post_deleted)
+                // Nothing left to show, so close back to whatever opened this screen.
+                finish()
+            } else {
+                SignalManager.getInstance().toast(R.string.post_delete_failed)
+            }
+        }
+    }
 
     // --------------------------------------------------------------- States
 

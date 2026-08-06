@@ -12,13 +12,12 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ori.pivotboard_project.R
+import com.ori.pivotboard_project.adapters.PostActionHandler
 import com.ori.pivotboard_project.adapters.PostAdapter
 import com.ori.pivotboard_project.databinding.ActivitySearchBinding
-import com.ori.pivotboard_project.interfaces.PostCallback
 import com.ori.pivotboard_project.model.Post
 import com.ori.pivotboard_project.utilities.AuthManager
 import com.ori.pivotboard_project.utilities.DatabaseManager
-import com.ori.pivotboard_project.utilities.SignalManager
 
 /**
  * Search setups by ticker or tag.
@@ -27,7 +26,7 @@ import com.ori.pivotboard_project.utilities.SignalManager
  * so: ticker is a prefix match ("NV" finds NVDA), tag is an exact match on the stored
  * lowercase tag.
  */
-class SearchActivity : AppCompatActivity(), PostCallback {
+class SearchActivity : AppCompatActivity() {
 
     private enum class Mode { TICKER, TAG }
 
@@ -57,7 +56,11 @@ class SearchActivity : AppCompatActivity(), PostCallback {
 
         binding.searchTBToolbar.setNavigationOnClickListener { finish() }
 
-        postAdapter.postCallback = this
+        postAdapter.postCallback = PostActionHandler(
+            context = this,
+            adapter = postAdapter,
+            isActive = { !isFinishing && !isDestroyed }
+        )
         binding.searchRVResults.layoutManager = LinearLayoutManager(this)
         binding.searchRVResults.adapter = postAdapter
 
@@ -147,48 +150,6 @@ class SearchActivity : AppCompatActivity(), PostCallback {
     private fun hideKeyboard() {
         val manager = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
         manager?.hideSoftInputFromWindow(binding.searchEDTQuery.windowToken, 0)
-    }
-
-    // ----------------------------------------------------------- Post cards
-
-    override fun onPostClicked(post: Post, position: Int) =
-        PostDetailActivity.start(this, post.id)
-
-    override fun onCommentClicked(post: Post, position: Int) =
-        PostDetailActivity.start(this, post.id)
-
-    override fun onAuthorClicked(post: Post, position: Int) =
-        ProfileActivity.start(this, post.authorId)
-
-    override fun onTickerClicked(post: Post, position: Int) =
-        TickerPostsActivity.start(this, post.ticker)
-
-    override fun onLikeClicked(post: Post, position: Int) {
-        val uid = AuthManager.getInstance().currentUid()
-        if (uid.isEmpty()) return
-
-        val wasLiked = postAdapter.likedPostIds.contains(post.id)
-        applyLikeLocally(post, position, !wasLiked)
-
-        DatabaseManager.getInstance().toggleLike(
-            post = post,
-            uid = uid,
-            fromName = AuthManager.getInstance().currentUser()?.displayName.orEmpty(),
-            shouldLike = !wasLiked
-        ) { success ->
-            if (isFinishing || isDestroyed) return@toggleLike
-            if (!success) {
-                applyLikeLocally(post, position, wasLiked)
-                SignalManager.getInstance().toast(R.string.error_like_failed)
-            }
-        }
-    }
-
-    private fun applyLikeLocally(post: Post, position: Int, isLiked: Boolean) {
-        postAdapter.likedPostIds =
-            if (isLiked) postAdapter.likedPostIds + post.id else postAdapter.likedPostIds - post.id
-        post.likeCount = (post.likeCount + if (isLiked) 1 else -1).coerceAtLeast(0)
-        postAdapter.notifyItemChanged(position)
     }
 
     companion object {

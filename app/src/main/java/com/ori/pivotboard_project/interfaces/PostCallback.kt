@@ -9,4 +9,7 @@ interface PostCallback {
     fun onCommentClicked(post: Post, position: Int)
     fun onAuthorClicked(post: Post, position: Int)
     fun onTickerClicked(post: Post, position: Int)
+
+    /** Raised from the card's overflow menu, which only the post's author can see. */
+    fun onDeletePostClicked(post: Post, position: Int)
 }

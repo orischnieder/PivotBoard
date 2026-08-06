@@ -12,10 +12,10 @@ import com.ori.pivotboard_project.activities.PostDetailActivity
 import com.ori.pivotboard_project.activities.TickerPostsActivity
 import com.ori.pivotboard_project.activities.UserListActivity
 import com.ori.pivotboard_project.activities.WatchlistActivity
+import com.ori.pivotboard_project.adapters.PostActionHandler
 import com.ori.pivotboard_project.adapters.PostAdapter
 import com.ori.pivotboard_project.databinding.DialogEditProfileBinding
 import com.ori.pivotboard_project.databinding.FragmentProfileBinding
-import com.ori.pivotboard_project.interfaces.PostCallback
 import com.ori.pivotboard_project.model.Post
 import com.ori.pivotboard_project.model.User
 import com.ori.pivotboard_project.utilities.AuthManager
@@ -31,7 +31,7 @@ import com.ori.pivotboard_project.utilities.SignalManager
  * else's), which keeps one implementation of the header and the post list. With no uid
  * argument it falls back to the signed-in user.
  */
-class ProfileFragment : Fragment(), PostCallback {
+class ProfileFragment : Fragment() {
 
     private var binding: FragmentProfileBinding? = null
     private val postAdapter = PostAdapter()
@@ -59,7 +59,16 @@ class ProfileFragment : Fragment(), PostCallback {
         super.onViewCreated(view, savedInstanceState)
         val binding = this.binding ?: return
 
-        postAdapter.postCallback = this
+        // Already on this author's page, so the author targets should not reopen it.
+        // Deleting a post here also has to move the visible posts counter.
+        postAdapter.postCallback = object : PostActionHandler(
+            context = requireContext(),
+            adapter = postAdapter,
+            isActive = { this@ProfileFragment.binding != null },
+            onPostDeleted = { onOwnPostDeleted() }
+        ) {
+            override fun onAuthorClicked(post: Post, position: Int) = Unit
+        }
         binding.profileRVPosts.layoutManager = LinearLayoutManager(requireContext())
         binding.profileRVPosts.adapter = postAdapter
 
@@ -260,47 +269,22 @@ class ProfileFragment : Fragment(), PostCallback {
         }
     }
 
-    // ----------------------------------------------------------- Post cards
+    /** Keeps the header counter honest without waiting for a reload. */
+    private fun onOwnPostDeleted() {
+        val binding = this.binding ?: return
+        val user = profileUser ?: return
 
-    override fun onPostClicked(post: Post, position: Int) =
-        PostDetailActivity.start(requireContext(), post.id)
+        user.postsCount = (user.postsCount - 1).coerceAtLeast(0)
+        binding.profileLBLPostsCount.text = user.postsCount.toString()
 
-    override fun onCommentClicked(post: Post, position: Int) =
-        PostDetailActivity.start(requireContext(), post.id)
-
-    override fun onLikeClicked(post: Post, position: Int) {
-        val uid = AuthManager.getInstance().currentUid()
-        if (uid.isEmpty()) return
-
-        val wasLiked = postAdapter.likedPostIds.contains(post.id)
-        applyLikeLocally(post, position, !wasLiked)
-
-        DatabaseManager.getInstance().toggleLike(
-            post = post,
-            uid = uid,
-            fromName = AuthManager.getInstance().currentUser()?.displayName.orEmpty(),
-            shouldLike = !wasLiked
-        ) { success ->
-            if (binding == null) return@toggleLike
-            if (!success) {
-                applyLikeLocally(post, position, wasLiked)
-                SignalManager.getInstance().toast(R.string.error_like_failed)
-            }
+        if (postAdapter.items.isEmpty()) {
+            binding.profileLBLNoPosts.visibility = View.VISIBLE
+            binding.profileLBLNoPosts.setText(
+                if (isOwnProfile) R.string.profile_no_posts_own
+                else R.string.profile_no_posts_other
+            )
         }
     }
-
-    private fun applyLikeLocally(post: Post, position: Int, isLiked: Boolean) {
-        postAdapter.likedPostIds =
-            if (isLiked) postAdapter.likedPostIds + post.id else postAdapter.likedPostIds - post.id
-        post.likeCount = (post.likeCount + if (isLiked) 1 else -1).coerceAtLeast(0)
-        postAdapter.notifyItemChanged(position)
-    }
-
-    /** Already on this author's profile. */
-    override fun onAuthorClicked(post: Post, position: Int) = Unit
-
-    override fun onTickerClicked(post: Post, position: Int) =
-        TickerPostsActivity.start(requireContext(), post.ticker)
 
     // -------------------------------------------------------------- States
 

@@ -518,6 +518,109 @@ class DatabaseManager private constructor(context: Context) {
             }
     }
 
+    /**
+     * Deletes a post together with everything hanging off it.
+     *
+     * Firestore does not cascade: removing `posts/{id}` would orphan its `comments` and
+     * `likes` subcollections, which stay billable while being invisible in the console.
+     * There is no recursive delete without a server, so the children are read and removed
+     * explicitly.
+     *
+     * Normally this is a single atomic batch - the post, its children and the author's
+     * `postsCount` all go together or none of them do. A post with more children than a
+     * batch allows falls back to chunked deletes, which is not atomic; that path is logged.
+     *
+     * The chart image is removed afterwards, in [deletePostImage], because Storage cannot
+     * take part in a Firestore batch.
+     */
+    fun deletePost(post: Post, onResult: (success: Boolean) -> Unit) {
+        if (post.id.isEmpty()) {
+            onResult(false)
+            return
+        }
+
+        val commentsTask = commentsRef(post.id).get()
+        val likesTask = likesRef(post.id).get()
+
+        Tasks.whenAllSuccess<QuerySnapshot>(listOf(commentsTask, likesTask))
+            .addOnSuccessListener { snapshots ->
+                val childRefs = snapshots.flatMap { snapshot ->
+                    snapshot.documents.map { it.reference }
+                }
+
+                if (childRefs.size + POST_DELETE_RESERVED_OPS <= MAX_BATCH_OPS) {
+                    deletePostAtomically(post, childRefs, onResult)
+                } else {
+                    Log.w(
+                        TAG,
+                        "post ${post.id} has ${childRefs.size} children; " +
+                            "deleting in chunks (not atomic)"
+                    )
+                    deletePostInChunks(post, childRefs, onResult)
+                }
+            }
+            .addOnFailureListener { e ->
+                logFirestoreFailure("delete post: read children", e)
+                onResult(false)
+            }
+    }
+
+    private fun deletePostAtomically(
+        post: Post,
+        childRefs: List<DocumentReference>,
+        onResult: (success: Boolean) -> Unit
+    ) {
+        val batch = db.batch()
+        childRefs.forEach { batch.delete(it) }
+        batch.delete(postDoc(post.id))
+        batch.set(
+            userDoc(post.authorId),
+            mapOf(Constants.FIRESTORE.USER_POSTS_COUNT to FieldValue.increment(-1)),
+            SetOptions.merge()
+        )
+
+        batch.commit()
+            .addOnSuccessListener {
+                deletePostImage(post)
+                onResult(true)
+            }
+            .addOnFailureListener { e ->
+                logFirestoreFailure("delete post", e)
+                onResult(false)
+            }
+    }
+
+    /** Children first, then the post, so a partial failure never orphans the children. */
+    private fun deletePostInChunks(
+        post: Post,
+        childRefs: List<DocumentReference>,
+        onResult: (success: Boolean) -> Unit
+    ) {
+        val chunkCommits = childRefs.chunked(MAX_BATCH_OPS).map { chunk ->
+            val batch = db.batch()
+            chunk.forEach { batch.delete(it) }
+            batch.commit()
+        }
+
+        Tasks.whenAllSuccess<Void>(chunkCommits)
+            .addOnSuccessListener { deletePostAtomically(post, emptyList(), onResult) }
+            .addOnFailureListener { e ->
+                logFirestoreFailure("delete post: children chunks", e)
+                onResult(false)
+            }
+    }
+
+    /**
+     * Best effort: the post is already gone by this point, so a failed image delete must not
+     * be reported as a failed deletion. Worst case is an orphaned file, which is logged.
+     */
+    private fun deletePostImage(post: Post) {
+        if (post.imageUrl.isBlank()) return
+        StorageManager.getInstance().deleteImage(post.imageUrl) { success ->
+            if (!success) Log.w(TAG, "chart image for post ${post.id} was not deleted")
+        }
+    }
+
     // ---------------------------------------------------------------- Feed
 
     // ---------------------------------------------------------------- Search
@@ -859,6 +962,12 @@ class DatabaseManager private constructor(context: Context) {
 
     companion object {
         private const val TAG = "PivotBoardDB"
+
+        /** Firestore's hard limit on operations in one batched write. */
+        private const val MAX_BATCH_OPS = 500
+
+        /** Slots the post-delete batch needs beyond its children: the post and the counter. */
+        private const val POST_DELETE_RESERVED_OPS = 2
 
         /**
          * Private-use code point U+F8FF (invisible in most editors). It sorts after any

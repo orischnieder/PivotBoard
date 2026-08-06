@@ -7,22 +7,18 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ori.pivotboard_project.R
-import com.ori.pivotboard_project.activities.PostDetailActivity
-import com.ori.pivotboard_project.activities.ProfileActivity
-import com.ori.pivotboard_project.activities.TickerPostsActivity
+import com.ori.pivotboard_project.adapters.PostActionHandler
 import com.ori.pivotboard_project.adapters.PostAdapter
 import com.ori.pivotboard_project.databinding.FragmentPostListBinding
-import com.ori.pivotboard_project.interfaces.PostCallback
 import com.ori.pivotboard_project.model.Post
 import com.ori.pivotboard_project.utilities.AuthManager
 import com.ori.pivotboard_project.utilities.DatabaseManager
-import com.ori.pivotboard_project.utilities.SignalManager
 
 /**
  * One page of the feed. Both tabs use this same fragment - only [mode] differs, which keeps
- * the list, its states and the like handling in a single place.
+ * the list and its states in a single place. Card behaviour lives in [PostActionHandler].
  */
-class PostListFragment : Fragment(), PostCallback {
+class PostListFragment : Fragment() {
 
     enum class Mode { FOLLOWING, DISCOVER }
 
@@ -45,7 +41,11 @@ class PostListFragment : Fragment(), PostCallback {
         super.onViewCreated(view, savedInstanceState)
         val binding = this.binding ?: return
 
-        adapter.postCallback = this
+        adapter.postCallback = PostActionHandler(
+            context = requireContext(),
+            adapter = adapter,
+            isActive = { this.binding != null }
+        )
         binding.postlistRVPosts.layoutManager = LinearLayoutManager(requireContext())
         binding.postlistRVPosts.adapter = adapter
 
@@ -123,57 +123,6 @@ class PostListFragment : Fragment(), PostCallback {
         binding.postlistLAYEmpty.visibility = if (empty) View.VISIBLE else View.GONE
         binding.postlistLAYError.visibility = if (error) View.VISIBLE else View.GONE
     }
-
-    // ------------------------------------------------------------ Callbacks
-
-    /**
-     * Optimistic: the card flips immediately and is rolled back if the write fails, so the
-     * feed never feels like it is waiting on the network.
-     */
-    override fun onLikeClicked(post: Post, position: Int) {
-        val uid = AuthManager.getInstance().currentUid()
-        if (uid.isEmpty()) return
-
-        val wasLiked = adapter.likedPostIds.contains(post.id)
-        val shouldLike = !wasLiked
-
-        applyLikeLocally(post, position, shouldLike)
-
-        DatabaseManager.getInstance().toggleLike(
-            post = post,
-            uid = uid,
-            fromName = AuthManager.getInstance().currentUser()?.displayName.orEmpty(),
-            shouldLike = shouldLike
-        ) { success ->
-            if (binding == null) return@toggleLike
-            if (!success) {
-                applyLikeLocally(post, position, wasLiked)
-                SignalManager.getInstance().toast(R.string.error_like_failed)
-            }
-        }
-    }
-
-    private fun applyLikeLocally(post: Post, position: Int, isLiked: Boolean) {
-        adapter.likedPostIds =
-            if (isLiked) adapter.likedPostIds + post.id else adapter.likedPostIds - post.id
-        post.likeCount = (post.likeCount + if (isLiked) 1 else -1).coerceAtLeast(0)
-        adapter.notifyItemChanged(position)
-    }
-
-    override fun onPostClicked(post: Post, position: Int) = openDetail(post)
-
-    /** The comment button opens the same screen - the comment box lives there. */
-    override fun onCommentClicked(post: Post, position: Int) = openDetail(post)
-
-    private fun openDetail(post: Post) {
-        PostDetailActivity.start(requireContext(), post.id)
-    }
-
-    override fun onAuthorClicked(post: Post, position: Int) =
-        ProfileActivity.start(requireContext(), post.authorId)
-
-    override fun onTickerClicked(post: Post, position: Int) =
-        TickerPostsActivity.start(requireContext(), post.ticker)
 
     override fun onDestroyView() {
         super.onDestroyView()

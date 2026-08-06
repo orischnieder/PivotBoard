@@ -148,6 +148,25 @@
                 app:icon="@drawable/ic_comment"
                 app:iconTint="?attr/colorOnSurfaceVariant"
                 tools:text="3" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" />
+
+            <!-- Author-only; visibility is set in the adapter. -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/post_BTN_menu"
+                style="@style/Widget.Material3.Button.IconButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/post_cd_menu"
+                android:minWidth="48dp"
+                android:minHeight="48dp"
+                android:visibility="gone"
+                app:icon="@drawable/ic_more_vert"
+                app:iconTint="?attr/colorOnSurfaceVariant"
+                tools:visibility="visible" />
         </LinearLayout>
     </LinearLayout>
 

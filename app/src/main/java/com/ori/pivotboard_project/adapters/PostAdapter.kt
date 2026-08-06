@@ -4,12 +4,14 @@ import android.content.res.ColorStateList
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.PopupMenu
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.color.MaterialColors
 import com.ori.pivotboard_project.R
 import com.ori.pivotboard_project.databinding.PostItemBinding
 import com.ori.pivotboard_project.interfaces.PostCallback
 import com.ori.pivotboard_project.model.Post
+import com.ori.pivotboard_project.utilities.AuthManager
 import com.ori.pivotboard_project.utilities.ImageLoader
 import com.ori.pivotboard_project.utilities.TimeFormatter
 
@@ -43,6 +45,15 @@ class PostAdapter(
         notifyDataSetChanged()
     }
 
+    /** Drops a row locally after its post has been deleted server-side. */
+    fun removeItem(position: Int) {
+        if (position !in items.indices) return
+        items = items.toMutableList().apply { removeAt(position) }
+        notifyItemRemoved(position)
+        // Later holders cache their own positions, so refresh the tail.
+        notifyItemRangeChanged(position, items.size - position)
+    }
+
     inner class PostViewHolder(private val binding: PostItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
@@ -53,6 +64,31 @@ class PostAdapter(
             binding.postIMGAvatar.setOnClickListener { notify { post, pos -> onAuthorClicked(post, pos) } }
             binding.postLBLAuthor.setOnClickListener { notify { post, pos -> onAuthorClicked(post, pos) } }
             binding.postLBLTicker.setOnClickListener { notify { post, pos -> onTickerClicked(post, pos) } }
+            binding.postBTNMenu.setOnClickListener { showOverflowMenu() }
+        }
+
+        /**
+         * The PopupMenu is built here rather than in the callback: the adapter owns the
+         * views, so it owns the anchoring. The callback stays about intent.
+         */
+        private fun showOverflowMenu() {
+            val position = absoluteAdapterPosition
+            if (position == RecyclerView.NO_POSITION) return
+
+            PopupMenu(binding.postBTNMenu.context, binding.postBTNMenu).apply {
+                menuInflater.inflate(R.menu.post_item_menu, menu)
+                setOnMenuItemClickListener { item ->
+                    if (item.itemId == R.id.post_MNU_delete) {
+                        val current = absoluteAdapterPosition
+                        if (current != RecyclerView.NO_POSITION) {
+                            postCallback?.onDeletePostClicked(items[current], current)
+                        }
+                        true
+                    } else {
+                        false
+                    }
+                }
+            }.show()
         }
 
         /** Guards every click against a stale position after the list has changed. */
@@ -78,6 +114,10 @@ class PostAdapter(
 
             binding.postBTNLike.text = post.likeCount.toString()
             binding.postBTNComment.text = post.commentCount.toString()
+
+            // Only the author can delete, so only the author sees the overflow.
+            val isOwnPost = post.authorId == AuthManager.getInstance().currentUid()
+            binding.postBTNMenu.visibility = if (isOwnPost) View.VISIBLE else View.GONE
 
             bindLikeState(post)
         }
