@@ -56,14 +56,46 @@
                 android:paddingHorizontal="16dp"
                 android:paddingTop="20dp">
 
-                <ImageView
-                    android:id="@+id/profile_IMG_avatar"
+                <FrameLayout
+                    android:id="@+id/profile_LAY_avatar"
                     android:layout_width="80dp"
-                    android:layout_height="80dp"
-                    android:background="@drawable/bg_avatar_circle"
-                    android:clipToOutline="true"
-                    android:contentDescription="@string/cd_author_avatar"
-                    android:scaleType="centerCrop" />
+                    android:layout_height="80dp">
+
+                    <ImageView
+                        android:id="@+id/profile_IMG_avatar"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/bg_avatar_circle"
+                        android:clipToOutline="true"
+                        android:contentDescription="@string/cd_author_avatar"
+                        android:scaleType="centerCrop" />
+
+                    <!-- Shown over the avatar while a new photo uploads. -->
+                    <com.google.android.material.progressindicator.CircularProgressIndicator
+                        android:id="@+id/profile_PRG_avatar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:indeterminate="false"
+                        android:visibility="gone"
+                        app:indicatorSize="52dp"
+                        app:trackThickness="4dp"
+                        tools:visibility="visible" />
+
+                    <!-- Own profile only; enabled in code. -->
+                    <ImageView
+                        android:id="@+id/profile_IMG_avatar_edit"
+                        android:layout_width="26dp"
+                        android:layout_height="26dp"
+                        android:layout_gravity="bottom|end"
+                        android:background="@drawable/bg_avatar_edit"
+                        android:contentDescription="@string/profile_cd_change_photo"
+                        android:padding="5dp"
+                        android:src="@drawable/ic_camera"
+                        android:visibility="gone"
+                        app:tint="?attr/colorOnPrimary"
+                        tools:visibility="visible" />
+                </FrameLayout>
 
                 <!-- Counts -->
                 <LinearLayout

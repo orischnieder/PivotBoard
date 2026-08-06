@@ -1,9 +1,12 @@
 package com.ori.pivotboard_project.ui
 
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -23,6 +26,7 @@ import com.ori.pivotboard_project.utilities.Constants
 import com.ori.pivotboard_project.utilities.DatabaseManager
 import com.ori.pivotboard_project.utilities.ImageLoader
 import com.ori.pivotboard_project.utilities.SignalManager
+import com.ori.pivotboard_project.utilities.StorageManager
 
 /**
  * Section 5.5 - a user profile with counts, follow state and that user's posts.
@@ -38,6 +42,13 @@ class ProfileFragment : Fragment() {
 
     private var profileUser: User? = null
     private var isFollowing = false
+    private var isUploadingPhoto = false
+
+    private val pickPhotoLauncher =
+        registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+            // A null uri just means the picker was dismissed.
+            if (uri != null) uploadProfilePhoto(uri)
+        }
 
     private val targetUid: String
         get() = arguments?.getString(ARG_UID).takeUnless { it.isNullOrEmpty() }
@@ -74,6 +85,12 @@ class ProfileFragment : Fragment() {
 
         binding.profileBTNAction.setOnClickListener {
             if (isOwnProfile) showEditDialog() else toggleFollow()
+        }
+
+        // Only your own picture is editable.
+        binding.profileIMGAvatarEdit.visibility = if (isOwnProfile) View.VISIBLE else View.GONE
+        if (isOwnProfile) {
+            binding.profileLAYAvatar.setOnClickListener { pickProfilePhoto() }
         }
 
         binding.profileLAYFollowers.setOnClickListener {
@@ -231,6 +248,76 @@ class ProfileFragment : Fragment() {
         user.followersCount = (user.followersCount + if (following) 1 else -1).coerceAtLeast(0)
         binding.profileLBLFollowersCount.text = user.followersCount.toString()
         bindActionButton()
+    }
+
+    // -------------------------------------------------------- Profile photo
+
+    private fun pickProfilePhoto() {
+        if (isUploadingPhoto) return
+        pickPhotoLauncher.launch(
+            PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+        )
+    }
+
+    /**
+     * Upload to Storage, then point the profile at the new url.
+     *
+     * The previous image is removed only after the new one is safely referenced, so a failed
+     * upload never leaves the user without a picture.
+     */
+    private fun uploadProfilePhoto(imageUri: Uri) {
+        val user = profileUser ?: return
+        val uid = AuthManager.getInstance().currentUid()
+        if (uid.isEmpty() || isUploadingPhoto) return
+
+        val previousPhotoUrl = user.photoUrl
+        setPhotoUploading(true)
+        SignalManager.getInstance().toast(R.string.profile_photo_uploading)
+
+        StorageManager.getInstance().uploadImage(
+            imageUri = imageUri,
+            uid = uid,
+            onProgress = { percent -> binding?.profilePRGAvatar?.progress = percent }
+        ) { downloadUrl ->
+            if (binding == null) return@uploadImage
+
+            if (downloadUrl == null) {
+                setPhotoUploading(false)
+                SignalManager.getInstance().toast(R.string.profile_photo_failed)
+                return@uploadImage
+            }
+            savePhotoUrl(user, downloadUrl, previousPhotoUrl)
+        }
+    }
+
+    private fun savePhotoUrl(user: User, downloadUrl: String, previousPhotoUrl: String) {
+        DatabaseManager.getInstance().updateProfilePhoto(user.id, downloadUrl) { success ->
+            val binding = this.binding ?: return@updateProfilePhoto
+            setPhotoUploading(false)
+
+            if (!success) {
+                SignalManager.getInstance().toast(R.string.profile_photo_failed)
+                return@updateProfilePhoto
+            }
+
+            user.photoUrl = downloadUrl
+            ImageLoader.getInstance().loadImage(downloadUrl, binding.profileIMGAvatar)
+            SignalManager.getInstance().toast(R.string.profile_photo_updated)
+
+            // Best effort tidy-up. A Google sign-in avatar is not ours to delete, and
+            // deleteImage safely ignores any non-Firebase url.
+            if (previousPhotoUrl.isNotBlank() && previousPhotoUrl != downloadUrl) {
+                StorageManager.getInstance().deleteImage(previousPhotoUrl)
+            }
+        }
+    }
+
+    private fun setPhotoUploading(uploading: Boolean) {
+        val binding = this.binding ?: return
+        isUploadingPhoto = uploading
+        binding.profilePRGAvatar.progress = 0
+        binding.profilePRGAvatar.visibility = if (uploading) View.VISIBLE else View.GONE
+        binding.profileLAYAvatar.isEnabled = !uploading
     }
 
     private fun showEditDialog() {

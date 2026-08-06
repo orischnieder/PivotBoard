@@ -172,11 +172,70 @@ class DatabaseManager private constructor(context: Context) {
             ),
             SetOptions.merge()
         )
-            .addOnSuccessListener { onResult(true) }
+            .addOnSuccessListener {
+                backfillAuthoredPosts(
+                    uid,
+                    mapOf(Constants.FIRESTORE.POST_AUTHOR_NAME to displayName)
+                )
+                onResult(true)
+            }
             .addOnFailureListener { e ->
                 logFirestoreFailure("update profile", e)
                 onResult(false)
             }
+    }
+
+    /** Sets the avatar url after a successful upload. */
+    fun updateProfilePhoto(
+        uid: String,
+        photoUrl: String,
+        onResult: (success: Boolean) -> Unit
+    ) {
+        userDoc(uid).set(
+            mapOf(Constants.FIRESTORE.USER_PHOTO_URL to photoUrl),
+            SetOptions.merge()
+        )
+            .addOnSuccessListener {
+                backfillAuthoredPosts(
+                    uid,
+                    mapOf(Constants.FIRESTORE.POST_AUTHOR_PHOTO_URL to photoUrl)
+                )
+                onResult(true)
+            }
+            .addOnFailureListener { e ->
+                logFirestoreFailure("update profile photo", e)
+                onResult(false)
+            }
+    }
+
+    /**
+     * Rewrites the author fields copied onto this user's existing posts.
+     *
+     * `authorName` and `authorPhotoUrl` are denormalized onto every post so the feed can
+     * render a card without a second lookup. That copy goes stale the moment the profile
+     * changes, so old cards would keep showing the previous name or avatar.
+     *
+     * Best effort and fire-and-forget: the profile itself is already saved, so a failure
+     * here is logged rather than surfaced. Capped at one batch - a user with more posts than
+     * that would need paging, which this app never approaches.
+     */
+    private fun backfillAuthoredPosts(uid: String, fields: Map<String, Any>) {
+        postsRef
+            .whereEqualTo(Constants.FIRESTORE.POST_AUTHOR_ID, uid)
+            .limit(MAX_BATCH_OPS.toLong())
+            .get()
+            .addOnSuccessListener { snapshot ->
+                if (snapshot.isEmpty) return@addOnSuccessListener
+
+                val batch = db.batch()
+                snapshot.documents.forEach { batch.update(it.reference, fields) }
+                batch.commit()
+                    .addOnSuccessListener {
+                        Log.d(TAG, "backfilled ${snapshot.size()} post(s) for $uid")
+                    }
+                    .addOnFailureListener { logFirestoreFailure("backfill author fields", it) }
+            }
+            .addOnFailureListener { logFirestoreFailure("backfill: read posts", it) }
     }
 
     /**
