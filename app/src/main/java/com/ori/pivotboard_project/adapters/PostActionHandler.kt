@@ -73,8 +73,16 @@ open class PostActionHandler(
         adapter.notifyItemChanged(position)
     }
 
+    /**
+     * Guards against a second delete for the same post being submitted while the first is
+     * still in flight - two confirmations would otherwise decrement the counter twice.
+     */
+    private val deletesInFlight = mutableSetOf<String>()
+
     /** Destructive and irreversible, so it always goes through a confirmation first. */
     override fun onDeletePostClicked(post: Post, position: Int) {
+        if (post.id in deletesInFlight) return
+
         MaterialAlertDialogBuilder(context)
             .setTitle(R.string.post_delete_title)
             .setMessage(R.string.post_delete_message)
@@ -86,7 +94,10 @@ open class PostActionHandler(
     }
 
     private fun deletePost(post: Post, position: Int) {
+        if (!deletesInFlight.add(post.id)) return
+
         DatabaseManager.getInstance().deletePost(post) { success ->
+            deletesInFlight.remove(post.id)
             if (!isActive()) return@deletePost
 
             if (success) {

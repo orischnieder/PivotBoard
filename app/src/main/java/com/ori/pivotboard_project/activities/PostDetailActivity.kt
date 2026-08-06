@@ -42,6 +42,7 @@ class PostDetailActivity : AppCompatActivity(), CommentCallback {
 
     private var post: Post? = null
     private var isLiked = false
+    private var isDeleting = false
     private var commentsRegistration: ListenerRegistration? = null
 
     private val postId: String
@@ -265,6 +266,8 @@ class PostDetailActivity : AppCompatActivity(), CommentCallback {
         ProfileActivity.start(this, comment.authorId)
 
     private fun confirmDelete() {
+        if (isDeleting) return
+
         MaterialAlertDialogBuilder(this)
             .setTitle(R.string.post_delete_title)
             .setMessage(R.string.post_delete_message)
@@ -275,9 +278,16 @@ class PostDetailActivity : AppCompatActivity(), CommentCallback {
 
     private fun deletePost() {
         val post = this.post ?: return
+        if (isDeleting) return
+
+        // Also hide the action, so the menu cannot re-arm while the delete is running.
+        isDeleting = true
+        binding.detailTBToolbar.menu.findItem(R.id.detail_MNU_delete)?.isEnabled = false
 
         DatabaseManager.getInstance().deletePost(post) { success ->
+            isDeleting = false
             if (isFinishing || isDestroyed) return@deletePost
+            binding.detailTBToolbar.menu.findItem(R.id.detail_MNU_delete)?.isEnabled = true
 
             if (success) {
                 SignalManager.getInstance().toast(R.string.post_deleted)

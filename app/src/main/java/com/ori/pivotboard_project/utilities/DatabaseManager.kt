@@ -565,21 +565,43 @@ class DatabaseManager private constructor(context: Context) {
             }
     }
 
+    /**
+     * A transaction rather than a batch, specifically so `postsCount` can be clamped.
+     *
+     * A blind `increment(-1)` drives the counter negative whenever a post existed without a
+     * matching increment - a document seeded straight into the console, for instance, which
+     * never went through [createPost]. Reading the current value inside the transaction lets
+     * the new value floor at zero, and the transaction retries on contention, so two deletes
+     * racing cannot lose an update the way a read-then-write pair would.
+     *
+     * Still atomic: all reads happen before any write, and the post, its children and the
+     * counter all commit together.
+     *
+     * One caveat: [childRefs] came from queries run *before* the transaction, so a comment
+     * added in that window would survive. Harmless - it is orphaned and invisible.
+     */
     private fun deletePostAtomically(
         post: Post,
         childRefs: List<DocumentReference>,
         onResult: (success: Boolean) -> Unit
     ) {
-        val batch = db.batch()
-        childRefs.forEach { batch.delete(it) }
-        batch.delete(postDoc(post.id))
-        batch.set(
-            userDoc(post.authorId),
-            mapOf(Constants.FIRESTORE.USER_POSTS_COUNT to FieldValue.increment(-1)),
-            SetOptions.merge()
-        )
+        val authorRef = userDoc(post.authorId)
 
-        batch.commit()
+        db.runTransaction { transaction ->
+            // Reads first - Firestore rejects a transaction that reads after writing.
+            val authorSnapshot = transaction.get(authorRef)
+            val currentCount =
+                authorSnapshot.getLong(Constants.FIRESTORE.USER_POSTS_COUNT) ?: 0L
+            val nextCount = (currentCount - 1).coerceAtLeast(0L)
+
+            childRefs.forEach { transaction.delete(it) }
+            transaction.delete(postDoc(post.id))
+            transaction.set(
+                authorRef,
+                mapOf(Constants.FIRESTORE.USER_POSTS_COUNT to nextCount),
+                SetOptions.merge()
+            )
+        }
             .addOnSuccessListener {
                 deletePostImage(post)
                 onResult(true)
