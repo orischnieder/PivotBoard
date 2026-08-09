@@ -53,7 +53,9 @@ class PostDetailActivity : AppCompatActivity(), CommentCallback {
         binding = ActivityPostDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.root.applySystemBarPadding()
+        // applyIme: the comment box is pinned to the bottom, so it has to ride above the
+        // keyboard rather than sit under it.
+        binding.root.applySystemBarPadding(applyIme = true)
 
         binding.detailTBToolbar.setNavigationOnClickListener { finish() }
         binding.detailTBToolbar.inflateMenu(R.menu.post_detail_menu)

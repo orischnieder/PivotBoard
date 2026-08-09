@@ -47,7 +47,7 @@ class SearchActivity : AppCompatActivity() {
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.root.applySystemBarPadding()
+        binding.root.applySystemBarPadding(applyIme = true)
 
         binding.searchTBToolbar.setNavigationOnClickListener { finish() }
 

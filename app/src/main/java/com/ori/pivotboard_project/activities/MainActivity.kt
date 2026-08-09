@@ -37,7 +37,9 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.root.applySystemBarPadding(applyBottom = false)
+        // Bottom inset stays with the BottomNavigationView; the ime inset does not, because
+        // the Create Post and Watchlist tabs both have text fields.
+        binding.root.applySystemBarPadding(applyBottom = false, applyIme = true)
 
         setSupportActionBar(binding.mainTBToolbar)
         initBottomNavigation()
