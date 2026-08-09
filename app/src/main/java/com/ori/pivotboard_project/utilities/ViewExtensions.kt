@@ -15,10 +15,14 @@ import androidx.core.view.updatePadding
  * does - has to pass `false` here, or the inset gets applied twice and leaves an empty strip
  * above the navigation bar.
  *
- * [applyIme] is required for any screen with a text field, because `enableEdgeToEdge()`
- * defeats `android:windowSoftInputMode="adjustResize"`: the window stops resizing for the
- * keyboard once the app draws behind the system bars, so the manifest flag alone leaves the
- * input underneath the IME. Consuming the ime inset here restores the behaviour.
+ * [applyIme] is only for a screen whose input is **anchored to the bottom of the root** -
+ * PostDetailActivity's comment bar is the one case. There, `enableEdgeToEdge()` defeats
+ * `android:windowSoftInputMode="adjustResize"` and the bar ends up under the keyboard, so
+ * the ime inset has to be consumed here instead.
+ *
+ * Do NOT enable it for a screen whose inputs live inside a scrolling container. That
+ * container already keeps its field visible, and padding the root as well shrinks the
+ * content viewport twice - on a form-heavy screen it collapses to nothing.
  *
  * The display cutout is included so a notch cannot clip content in landscape.
  */

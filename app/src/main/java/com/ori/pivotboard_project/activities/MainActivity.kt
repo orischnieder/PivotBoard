@@ -37,9 +37,12 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Bottom inset stays with the BottomNavigationView; the ime inset does not, because
-        // the Create Post and Watchlist tabs both have text fields.
-        binding.root.applySystemBarPadding(applyBottom = false, applyIme = true)
+        // Bottom inset belongs to the BottomNavigationView, which pads itself.
+        //
+        // Deliberately no ime handling: the tab fragments put their inputs inside scrolling
+        // containers, so padding the root as well shrinks the content viewport twice and
+        // collapses the form. Only a bottom-anchored input needs that - see PostDetailActivity.
+        binding.root.applySystemBarPadding(applyBottom = false)
 
         setSupportActionBar(binding.mainTBToolbar)
         initBottomNavigation()

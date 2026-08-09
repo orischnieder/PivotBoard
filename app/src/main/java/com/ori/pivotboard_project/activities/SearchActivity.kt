@@ -47,7 +47,9 @@ class SearchActivity : AppCompatActivity() {
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.root.applySystemBarPadding(applyIme = true)
+        // No ime handling: the query field sits under the toolbar, well clear of the
+        // keyboard, and the results list scrolls.
+        binding.root.applySystemBarPadding()
 
         binding.searchTBToolbar.setNavigationOnClickListener { finish() }
 
