@@ -1,5 +1,7 @@
 # PivotBoard
 
+<img src="docs/ic_launcher_playstore_512.png" alt="PivotBoard app icon" width="120" />
+
 A native Android app where stock traders document and share technical-analysis setups,
 following the **Episodic Pivot (EP)** methodology. Users post a setup (ticker, setup type,
 chart screenshot and notes), follow other traders, like and comment, keep a personal
