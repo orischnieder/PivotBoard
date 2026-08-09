@@ -21,8 +21,10 @@ import com.google.firebase.firestore.toObject
 import com.ori.pivotboard_project.model.AppNotification
 import com.ori.pivotboard_project.model.Comment
 import com.ori.pivotboard_project.model.Post
+import com.ori.pivotboard_project.model.TrendingTicker
 import com.ori.pivotboard_project.model.User
 import com.ori.pivotboard_project.model.WatchItem
+import java.util.concurrent.TimeUnit
 
 /**
  * The only class in the app that holds a [FirebaseFirestore] handle.
@@ -703,6 +705,52 @@ class DatabaseManager private constructor(context: Context) {
     }
 
     // ---------------------------------------------------------------- Feed
+
+    // -------------------------------------------------------------- Trending
+
+    /**
+     * The most-posted tickers of the last [Constants.TRENDING.WINDOW_DAYS] days.
+     *
+     * The range filter and the ordering are on the same field, so this runs on the automatic
+     * single-field index - no composite index to create.
+     *
+     * Grouping happens client-side because Firestore has no GROUP BY. The alternative, an
+     * aggregation `count()` per ticker, would need the ticker list up front and one round
+     * trip each; a single capped scan is cheaper and simpler.
+     */
+    fun loadTrendingTickers(
+        onResult: (tickers: List<TrendingTicker>?, error: Exception?) -> Unit
+    ) {
+        val cutoff = System.currentTimeMillis() -
+            TimeUnit.DAYS.toMillis(Constants.TRENDING.WINDOW_DAYS)
+
+        postsRef
+            .whereGreaterThanOrEqualTo(Constants.FIRESTORE.POST_CREATED_AT, cutoff)
+            .orderBy(Constants.FIRESTORE.POST_CREATED_AT, Query.Direction.DESCENDING)
+            .limit(Constants.TRENDING.SCAN_LIMIT)
+            .get()
+            .addOnSuccessListener { snapshot ->
+                onResult(snapshot.toPosts().toTrendingTickers(), null)
+            }
+            .addOnFailureListener { e ->
+                logFirestoreFailure("load trending tickers", e)
+                onResult(null, e)
+            }
+    }
+
+    /** Ties break alphabetically, so equal counts do not reshuffle between refreshes. */
+    private fun List<Post>.toTrendingTickers(): List<TrendingTicker> =
+        filter { it.ticker.isNotBlank() }
+            .groupBy { it.ticker }
+            .map { (ticker, posts) ->
+                TrendingTicker(
+                    ticker = ticker,
+                    postCount = posts.size,
+                    authorCount = posts.map { it.authorId }.distinct().size
+                )
+            }
+            .sortedWith(compareByDescending<TrendingTicker> { it.postCount }.thenBy { it.ticker })
+            .take(Constants.TRENDING.MAX_RESULTS)
 
     // ---------------------------------------------------------------- Search
 

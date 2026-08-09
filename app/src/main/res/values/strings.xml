@@ -33,6 +33,19 @@
     <string name="feed_empty_following_body">Follow other traders, or switch to Discover to see what people are posting.</string>
     <string name="feed_empty_discover_title">No setups yet</string>
     <string name="feed_empty_discover_body">Be the first to post a setup from the Post tab.</string>
+    <string name="feed_tab_trending">Trending</string>
+    <string name="trending_header">Most-posted tickers this week</string>
+    <string name="trending_empty">No setups posted in the last 7 days. Trending fills up as traders post.</string>
+    <string name="trending_error">Could not load trending tickers.</string>
+    <string name="trending_summary_format">%1$s · %2$s</string>
+    <plurals name="trending_posts">
+        <item quantity="one">%d post</item>
+        <item quantity="other">%d posts</item>
+    </plurals>
+    <plurals name="trending_traders">
+        <item quantity="one">%d trader</item>
+        <item quantity="other">%d traders</item>
+    </plurals>
     <string name="error_feed_load">Could not load the feed.</string>
     <string name="error_like_failed">Could not update your like.</string>
     <string name="action_retry">Retry</string>

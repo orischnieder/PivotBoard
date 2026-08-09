@@ -93,6 +93,16 @@ object Constants {
         const val WHERE_IN_CHUNK = 10
     }
 
+    object TRENDING {
+        /** "Most-posted tickers this week" - section 7. */
+        const val WINDOW_DAYS = 7L
+
+        /** Caps how many posts one trending refresh reads. */
+        const val SCAN_LIMIT = 200L
+
+        const val MAX_RESULTS = 10
+    }
+
     object UI {
         const val SPLASH_FALLBACK_DELAY_MS = 1500L
         const val TICKER_MAX_LENGTH = 6

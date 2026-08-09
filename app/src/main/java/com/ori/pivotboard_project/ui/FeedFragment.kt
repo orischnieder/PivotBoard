@@ -34,12 +34,7 @@ class FeedFragment : Fragment() {
         binding.feedVPPager.adapter = FeedPagerAdapter(this)
 
         mediator = TabLayoutMediator(binding.feedTABTabs, binding.feedVPPager) { tab, position ->
-            tab.setText(
-                when (FeedPagerAdapter.MODES[position]) {
-                    PostListFragment.Mode.FOLLOWING -> R.string.feed_tab_following
-                    PostListFragment.Mode.DISCOVER -> R.string.feed_tab_discover
-                }
-            )
+            tab.setText(FeedPagerAdapter.PAGES[position].titleRes)
         }.also { it.attach() }
 
         restoreLastTab()
@@ -50,7 +45,7 @@ class FeedFragment : Fragment() {
         val binding = this.binding ?: return
         val lastTab = SharedPreferencesManager.getInstance()
             .getInt(Constants.SP_KEYS.LAST_FEED_TAB, 0)
-            .coerceIn(0, FeedPagerAdapter.MODES.lastIndex)
+            .coerceIn(0, FeedPagerAdapter.PAGES.lastIndex)
         binding.feedVPPager.setCurrentItem(lastTab, false)
     }
 
