@@ -6,14 +6,13 @@ import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.ActivityResultLauncher
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
 import com.google.firebase.auth.FirebaseUser
 import com.ori.pivotboard_project.R
 import com.ori.pivotboard_project.databinding.ActivityLoginBinding
 import com.ori.pivotboard_project.model.User
+import com.ori.pivotboard_project.utilities.applySystemBarPadding
 import com.ori.pivotboard_project.utilities.AuthManager
 import com.ori.pivotboard_project.utilities.DatabaseManager
 import com.ori.pivotboard_project.utilities.SignalManager
@@ -42,11 +41,7 @@ class LoginActivity : AppCompatActivity() {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
+        binding.root.applySystemBarPadding()
 
         binding.loginBTNSignin.setOnClickListener { launchSignIn() }
     }

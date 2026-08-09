@@ -34,7 +34,7 @@
                 android:layout_width="112dp"
                 android:layout_height="112dp"
                 android:contentDescription="@string/cd_app_logo"
-                android:src="@drawable/ic_pivotboard_logo" />
+                android:src="@mipmap/ic_launcher_round" />
 
             <TextView
                 android:id="@+id/login_LBL_welcome"

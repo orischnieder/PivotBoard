@@ -7,9 +7,8 @@ import android.os.Handler
 import android.os.Looper
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.ori.pivotboard_project.databinding.ActivitySplashScreenBinding
+import com.ori.pivotboard_project.utilities.applySystemBarPadding
 import com.ori.pivotboard_project.utilities.AuthManager
 import com.ori.pivotboard_project.utilities.Constants
 
@@ -33,11 +32,7 @@ class SplashScreenActivity : AppCompatActivity() {
         binding = ActivitySplashScreenBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
+        binding.root.applySystemBarPadding()
 
         startSplash()
     }

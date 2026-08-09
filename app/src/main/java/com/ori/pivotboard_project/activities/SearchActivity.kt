@@ -8,14 +8,13 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ori.pivotboard_project.R
 import com.ori.pivotboard_project.adapters.PostActionHandler
 import com.ori.pivotboard_project.adapters.PostAdapter
 import com.ori.pivotboard_project.databinding.ActivitySearchBinding
 import com.ori.pivotboard_project.model.Post
+import com.ori.pivotboard_project.utilities.applySystemBarPadding
 import com.ori.pivotboard_project.utilities.AuthManager
 import com.ori.pivotboard_project.utilities.DatabaseManager
 
@@ -48,11 +47,7 @@ class SearchActivity : AppCompatActivity() {
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
+        binding.root.applySystemBarPadding()
 
         binding.searchTBToolbar.setNavigationOnClickListener { finish() }
 

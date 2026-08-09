@@ -30,9 +30,19 @@
 
     <style name="Theme.PivotBoard" parent="Base.Theme.PivotBoard" />
 
-    <!-- Splash keeps the brand background behind the Lottie animation. -->
+    <!--
+      Splash keeps the brand background behind the logo.
+
+      windowSplashScreenAnimatedIcon is deliberately NOT set: leaving it unset makes the
+      Android 12+ system splash fall back to the launcher icon, which is exactly what we
+      want it to show. Only the background is overridden, so the system splash and this
+      activity share one colour and there is no white flash between them.
+    -->
     <style name="Theme.PivotBoard.Splash" parent="Theme.PivotBoard">
-        <item name="android:windowBackground">?attr/colorSurface</item>
+        <item name="android:windowBackground">@color/surface_light</item>
+        <item name="android:windowSplashScreenBackground" tools:targetApi="s">
+            @color/surface_light
+        </item>
     </style>
 
     <!-- Shared text appearances so screens don't re-declare sizes. -->

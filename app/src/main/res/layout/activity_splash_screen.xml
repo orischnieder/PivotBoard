@@ -28,7 +28,7 @@
         android:layout_width="140dp"
         android:layout_height="140dp"
         android:contentDescription="@string/cd_app_logo"
-        android:src="@drawable/ic_pivotboard_logo"
+        android:src="@mipmap/ic_launcher_round"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

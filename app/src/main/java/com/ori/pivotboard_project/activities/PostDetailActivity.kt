@@ -7,8 +7,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.color.MaterialColors
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -19,6 +17,7 @@ import com.ori.pivotboard_project.databinding.ActivityPostDetailBinding
 import com.ori.pivotboard_project.interfaces.CommentCallback
 import com.ori.pivotboard_project.model.Comment
 import com.ori.pivotboard_project.model.Post
+import com.ori.pivotboard_project.utilities.applySystemBarPadding
 import com.ori.pivotboard_project.utilities.AuthManager
 import com.ori.pivotboard_project.utilities.Constants
 import com.ori.pivotboard_project.utilities.DatabaseManager
@@ -54,11 +53,7 @@ class PostDetailActivity : AppCompatActivity(), CommentCallback {
         binding = ActivityPostDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
+        binding.root.applySystemBarPadding()
 
         binding.detailTBToolbar.setNavigationOnClickListener { finish() }
         binding.detailTBToolbar.inflateMenu(R.menu.post_detail_menu)
