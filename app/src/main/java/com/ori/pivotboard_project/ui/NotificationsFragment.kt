@@ -88,6 +88,10 @@ class NotificationsFragment : Fragment(), NotificationCallback {
             },
             onError = {
                 if (binding == null) return@listenToNotifications
+                // Signing out tears the session down before this listener detaches, so a
+                // denial here is expected rather than a real error worth showing.
+                if (!AuthManager.getInstance().isLoggedIn()) return@listenToNotifications
+
                 binding?.notificationsPRGLoading?.visibility = View.GONE
                 showMessage(R.string.notif_error)
             }

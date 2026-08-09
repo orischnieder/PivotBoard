@@ -128,6 +128,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun logout() {
+        // Detach before the credential is cleared. onStop would do it a moment too late:
+        // the listener re-fires against a signed-out session and Firestore - correctly -
+        // rejects it, which surfaces as a spurious PERMISSION_DENIED in the log.
+        unreadRegistration?.remove()
+        unreadRegistration = null
+
         AuthManager.getInstance().logout {
             SignalManager.getInstance().toast(R.string.logout_done)
             // Clear the back stack so the hardware back button cannot re-enter the app shell.
