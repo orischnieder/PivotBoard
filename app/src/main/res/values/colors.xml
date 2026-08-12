@@ -12,6 +12,10 @@
     <color name="brand_green">#00C896</color>
     <color name="brand_red">#E5484D</color>
 
+    <!-- For content sitting directly on brand_navy, which is the same in both modes. -->
+    <color name="brand_on_navy">#F0F4F9</color>
+    <color name="brand_on_navy_variant">#9FB0C4</color>
+
     <!-- Light scheme -->
     <color name="primary_light">#1E4976</color>
     <color name="on_primary_light">#FFFFFF</color>

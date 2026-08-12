@@ -31,10 +31,10 @@
 
             <ImageView
                 android:id="@+id/login_IMG_logo"
-                android:layout_width="112dp"
-                android:layout_height="112dp"
+                android:layout_width="128dp"
+                android:layout_height="128dp"
                 android:contentDescription="@string/cd_app_logo"
-                android:src="@mipmap/ic_launcher_round" />
+                android:src="@drawable/logo_pivotboard" />
 
             <TextView
                 android:id="@+id/login_LBL_welcome"

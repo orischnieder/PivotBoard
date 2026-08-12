@@ -4,7 +4,7 @@
     android:id="@+id/splash_LAY_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/colorSurface">
+    android:background="@color/brand_navy">
 
     <!--
       TODO(ori): drop a Lottie JSON at res/raw/splash_animation.json and set
@@ -25,10 +25,10 @@
 
     <ImageView
         android:id="@+id/splash_IMG_logo"
-        android:layout_width="140dp"
-        android:layout_height="140dp"
+        android:layout_width="160dp"
+        android:layout_height="160dp"
         android:contentDescription="@string/cd_app_logo"
-        android:src="@mipmap/ic_launcher_round"
+        android:src="@drawable/logo_pivotboard"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -41,7 +41,7 @@
         android:layout_marginTop="@dimen/space_xl"
         android:text="@string/app_name"
         android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"
-        android:textColor="?attr/colorOnSurface"
+        android:textColor="@color/brand_on_navy"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/splash_IMG_logo" />
@@ -52,7 +52,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/space_xs"
         android:text="@string/app_tagline"
-        android:textAppearance="@style/TextAppearance.PivotBoard.StateBody"
+        android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+        android:textColor="@color/brand_on_navy_variant"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/splash_LBL_name" />

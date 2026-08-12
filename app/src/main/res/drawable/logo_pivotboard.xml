@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  The PivotBoard mark: four bars on a shared baseline with a dashed level line across them.
+  Geometry is taken from the original launcher artwork, normalised to a 24x24 viewport.
+
+  Deliberately no navy plate. This has to sit on the navy splash without a visible tile edge
+  AND on Login's light surface without a dark box, so the background stays transparent and
+  the bars carry the brand on their own.
+
+  The dashes are nine explicit segments rather than a stroke dash pattern: VectorDrawable
+  has no stroke-dasharray, so a dashed rule has to be drawn as separate lines. They span
+  4.46 -> 19.54 divided evenly into nine dashes and eight gaps of 0.887 each.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!-- Bar 1 - red -->
+    <path
+        android:fillColor="#E5484D"
+        android:pathData="M5.92,15.03 H7.34 A0.55,0.55 0 0 1 7.89,15.58 V17.16 A0.55,0.55 0 0 1 7.34,17.71 H5.92 A0.55,0.55 0 0 1 5.37,17.16 V15.58 A0.55,0.55 0 0 1 5.92,15.03 Z" />
+
+    <!-- Bar 2 - green -->
+    <path
+        android:fillColor="#00C896"
+        android:pathData="M9.46,13.37 H10.88 A0.55,0.55 0 0 1 11.43,13.92 V17.16 A0.55,0.55 0 0 1 10.88,17.71 H9.46 A0.55,0.55 0 0 1 8.91,17.16 V13.92 A0.55,0.55 0 0 1 9.46,13.37 Z" />
+
+    <!-- Bar 3 - red -->
+    <path
+        android:fillColor="#E5484D"
+        android:pathData="M13.06,14.34 H14.48 A0.55,0.55 0 0 1 15.03,14.89 V17.16 A0.55,0.55 0 0 1 14.48,17.71 H13.06 A0.55,0.55 0 0 1 12.51,17.16 V14.89 A0.55,0.55 0 0 1 13.06,14.34 Z" />
+
+    <!-- Bar 4 - green -->
+    <path
+        android:fillColor="#00C896"
+        android:pathData="M16.61,8.00 H18.02 A0.55,0.55 0 0 1 18.57,8.55 V17.16 A0.55,0.55 0 0 1 18.02,17.71 H16.61 A0.55,0.55 0 0 1 16.06,17.16 V8.55 A0.55,0.55 0 0 1 16.61,8.00 Z" />
+
+    <!-- Dashed level line, drawn last so it sits in front of the bars -->
+    <path
+        android:strokeColor="#E696AFC8"
+        android:strokeWidth="0.62"
+        android:pathData="M4.46,13.37 H5.35 M6.23,13.37 H7.12 M8.01,13.37 H8.90 M9.78,13.37 H10.67 M11.56,13.37 H12.44 M13.33,13.37 H14.22 M15.11,13.37 H15.99 M16.88,13.37 H17.77 M18.65,13.37 H19.54" />
+
+</vector>

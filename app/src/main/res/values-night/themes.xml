@@ -37,11 +37,8 @@
         <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
     </style>
 
-    <!-- Dark counterpart, so the system splash matches the app surface at night too. -->
-    <style name="Theme.PivotBoard.Splash" parent="Theme.PivotBoard">
-        <item name="android:windowBackground">@color/surface_dark</item>
-        <item name="android:windowSplashScreenBackground" tools:targetApi="s">
-            @color/surface_dark
-        </item>
-    </style>
+    <!--
+      No night override for Theme.PivotBoard.Splash: the splash plate is the brand navy in
+      both modes, matching the launcher icon it animates out of.
+    -->
 </resources>

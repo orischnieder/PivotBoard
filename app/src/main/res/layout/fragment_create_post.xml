@@ -33,21 +33,28 @@
                 android:textAllCaps="true" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Setup type -->
-        <TextView
-            android:id="@+id/create_LBL_setup"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/gutter"
-            android:text="@string/create_label_setup"
-            android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
-            android:textColor="?attr/colorOnSurfaceVariant" />
-
-        <Spinner
-            android:id="@+id/create_SPN_setup"
+        <!--
+          Setup type. An exposed dropdown rather than a plain Spinner: the AOSP Spinner was
+          the only non-Material input on this form and rendered as a bare underlined widget
+          between two outlined boxes. The label lives in the hint, like the fields around it.
+        -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/create_LAY_setup"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="@dimen/touch_target_min" />
+            android:layout_marginTop="@dimen/gutter"
+            android:hint="@string/create_label_setup">
+
+            <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                android:id="@+id/create_SPN_setup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="none"
+                android:maxLines="1"
+                app:simpleItemLayout="@layout/setup_dropdown_item" />
+
+        </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Chart image -->
         <TextView

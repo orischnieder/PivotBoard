@@ -56,6 +56,10 @@ class MainActivity : AppCompatActivity() {
         if (savedInstanceState == null) {
             showFragment(FeedFragment())
         }
+
+        // On rotation the nav restores its selection without firing the listener, so the
+        // title has to be re-derived here or it would fall back to the layout's app name.
+        setToolbarTitle(binding.mainNAVBottom.selectedItemId)
     }
 
     /** Live unread badge on the Alerts tab; detached in onStop so it cannot leak. */
@@ -149,10 +153,27 @@ class MainActivity : AppCompatActivity() {
         binding.mainNAVBottom.setOnItemSelectedListener { item ->
             val fragment = fragmentFor(item.itemId) ?: return@setOnItemSelectedListener false
             showFragment(fragment)
+            setToolbarTitle(item.itemId)
             true
         }
         // Re-selecting the current tab should not rebuild it.
         binding.mainNAVBottom.setOnItemReselectedListener { }
+    }
+
+    /**
+     * The toolbar names the tab you are on rather than repeating the app name on all five.
+     * Feed keeps the app name, since it is the home tab.
+     */
+    private fun setToolbarTitle(itemId: Int) {
+        binding.mainTBToolbar.setTitle(
+            when (itemId) {
+                R.id.nav_create -> R.string.nav_create_title
+                R.id.nav_watchlist -> R.string.nav_watchlist
+                R.id.nav_notifications -> R.string.nav_notifications
+                R.id.nav_profile -> R.string.nav_profile
+                else -> R.string.app_name
+            }
+        )
     }
 
     private fun fragmentFor(itemId: Int): Fragment? = when (itemId) {

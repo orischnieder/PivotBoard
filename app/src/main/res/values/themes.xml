@@ -53,9 +53,11 @@
       activity share one colour and there is no white flash between them.
     -->
     <style name="Theme.PivotBoard.Splash" parent="Theme.PivotBoard">
-        <item name="android:windowBackground">@color/surface_light</item>
+        <item name="android:windowBackground">@color/brand_navy</item>
         <item name="android:windowSplashScreenBackground" tools:targetApi="s">
-            @color/surface_light
+            @color/brand_navy
         </item>
+        <!-- Light icons: the splash plate is navy in both modes. -->
+        <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
     </style>
 </resources>

@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.net.toUri
@@ -82,14 +81,11 @@ class CreatePostFragment : Fragment() {
 
     private fun initSetupSpinner() {
         val binding = this.binding ?: return
-        binding.createSPNSetup.adapter = ArrayAdapter(
-            requireContext(),
-            android.R.layout.simple_spinner_dropdown_item,
-            DataManager.setupTypes
-        )
-        binding.createSPNSetup.setSelection(
-            DataManager.setupTypes.indexOf(DataManager.defaultSetupType).coerceAtLeast(0)
-        )
+        binding.createSPNSetup.setSimpleItems(DataManager.setupTypes.toTypedArray())
+
+        // setText with filter=false: an AutoCompleteTextView would otherwise treat the
+        // preset as a search term and narrow the list to that one entry.
+        binding.createSPNSetup.setText(DataManager.defaultSetupType, false)
     }
 
     private fun showSelectedImage(uri: Uri) {
@@ -171,7 +167,7 @@ class CreatePostFragment : Fragment() {
             authorName = authorNameFor(),
             authorPhotoUrl = currentUser?.photoUrl?.toString().orEmpty(),
             ticker = ticker,
-            setupType = binding.createSPNSetup.selectedItem?.toString()
+            setupType = binding.createSPNSetup.text?.toString()
                 ?: DataManager.defaultSetupType,
             imageUrl = imageUrl,
             notes = binding.createEDTNotes.text?.toString()?.trim().orEmpty(),
@@ -225,6 +221,7 @@ class CreatePostFragment : Fragment() {
         binding.createEDTTicker.isEnabled = !publishing
         binding.createEDTNotes.isEnabled = !publishing
         binding.createEDTTags.isEnabled = !publishing
+        binding.createLAYSetup.isEnabled = !publishing
         binding.createSPNSetup.isEnabled = !publishing
 
         val visibility = if (publishing) View.VISIBLE else View.GONE

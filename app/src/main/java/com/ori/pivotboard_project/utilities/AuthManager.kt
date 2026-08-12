@@ -26,7 +26,7 @@ class AuthManager private constructor(context: Context) {
 
         return AuthUI.getInstance()
             .createSignInIntentBuilder()
-            .setLogo(R.mipmap.ic_launcher_round)
+            .setLogo(R.drawable.logo_pivotboard)
             .setAvailableProviders(providers)
             .setTheme(R.style.Theme_PivotBoard)
             .build()

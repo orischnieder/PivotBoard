@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Filled when the tab is selected, outlined when it is not. Material's own signal for
+  bottom-nav selection - without it the only cue is the colour of the active indicator.
+-->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/ic_nav_create" android:state_checked="true" />
+    <item android:drawable="@drawable/ic_nav_create_outline" />
+</selector>
