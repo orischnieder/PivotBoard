@@ -15,9 +15,10 @@
         android:paddingHorizontal="@dimen/card_padding"
         android:paddingVertical="@dimen/space_s">
 
+        <!-- Fixed width so the ticker chips stay on one line as ranks reach two digits. -->
         <TextView
             android:id="@+id/trending_LBL_rank"
-            android:layout_width="28dp"
+            android:layout_width="24dp"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:textAppearance="@style/TextAppearance.PivotBoard.Rank"

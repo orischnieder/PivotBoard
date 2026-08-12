@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.PopupMenu
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.color.MaterialColors
 import com.ori.pivotboard_project.R
@@ -127,10 +128,15 @@ class PostAdapter(
             binding.postBTNLike.setIconResource(
                 if (isLiked) R.drawable.ic_like_filled else R.drawable.ic_like
             )
-            val tintAttr =
-                if (isLiked) androidx.appcompat.R.attr.colorPrimary
-                else com.google.android.material.R.attr.colorOnSurfaceVariant
-            val tint = MaterialColors.getColor(binding.postBTNLike, tintAttr)
+            // A liked heart is the one place the brand red appears on a card.
+            val tint = if (isLiked) {
+                ContextCompat.getColor(binding.root.context, R.color.like_red)
+            } else {
+                MaterialColors.getColor(
+                    binding.postBTNLike,
+                    com.google.android.material.R.attr.colorOnSurfaceVariant
+                )
+            }
             binding.postBTNLike.iconTint = ColorStateList.valueOf(tint)
         }
     }

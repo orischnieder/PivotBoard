@@ -23,6 +23,7 @@ import com.ori.pivotboard_project.utilities.Constants
 import com.ori.pivotboard_project.utilities.DatabaseManager
 import com.ori.pivotboard_project.utilities.ImageLoader
 import com.ori.pivotboard_project.utilities.SignalManager
+import androidx.core.content.ContextCompat
 import com.ori.pivotboard_project.utilities.TimeFormatter
 import com.ori.pivotboard_project.utilities.hide
 import com.ori.pivotboard_project.utilities.showError
@@ -181,11 +182,16 @@ class PostDetailActivity : AppCompatActivity(), CommentCallback {
         binding.detailBTNLike.setIconResource(
             if (isLiked) R.drawable.ic_like_filled else R.drawable.ic_like
         )
-        val tintAttr =
-            if (isLiked) androidx.appcompat.R.attr.colorPrimary
-            else com.google.android.material.R.attr.colorOnSurfaceVariant
-        binding.detailBTNLike.iconTint =
-            ColorStateList.valueOf(MaterialColors.getColor(binding.detailBTNLike, tintAttr))
+        // Matches the feed card: liked hearts carry the brand red.
+        val tint = if (isLiked) {
+            ContextCompat.getColor(this, R.color.like_red)
+        } else {
+            MaterialColors.getColor(
+                binding.detailBTNLike,
+                com.google.android.material.R.attr.colorOnSurfaceVariant
+            )
+        }
+        binding.detailBTNLike.iconTint = ColorStateList.valueOf(tint)
     }
 
     private fun bindCommentCount(count: Int) {

@@ -8,5 +8,9 @@
     <color name="gain_green">#00C896</color>
     <color name="loss_red">#FF8A87</color>
 
+    <color name="like_red">#FF8A87</color>
+
     <color name="avatar_backdrop">#24374B</color>
+    <color name="placeholder_backdrop">#16283B</color>
+    <color name="placeholder_glyph">#45596F</color>
 </resources>

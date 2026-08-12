@@ -14,12 +14,17 @@
     android:paddingHorizontal="@dimen/gutter"
     android:paddingVertical="@dimen/space_s">
 
+    <!--
+      Sized to match the avatar in user_item so the two full-width list types share one
+      left column. Background and tint are set per notification type in the adapter.
+    -->
     <ImageView
         android:id="@+id/notif_IMG_type"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
+        android:layout_width="@dimen/avatar_medium"
+        android:layout_height="@dimen/avatar_medium"
+        android:background="@drawable/bg_notif_icon"
         android:contentDescription="@null"
-        app:tint="?attr/colorPrimary"
+        android:padding="@dimen/space_m"
         tools:src="@drawable/ic_like_filled" />
 
     <LinearLayout

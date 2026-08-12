@@ -84,8 +84,17 @@
     <color name="loss_red">#C0342F</color>
 
     <!--
+      A liked heart reads red everywhere, so it uses the brand red rather than the primary
+      navy. Darkened from #E5484D so it clears 4.5:1 on a light surface.
+    -->
+    <color name="like_red">#D93A3F</color>
+
+    <!--
       Literal neutrals for drawables that Glide may inflate with the application context,
-      where ?attr/ theme references are not resolvable.
+      where ?attr/ theme references are not resolvable. Plain colour resources still honour
+      -night, so values-night/colors.xml supplies the dark tones.
     -->
     <color name="avatar_backdrop">#E3E9F2</color>
+    <color name="placeholder_backdrop">#E3E9F2</color>
+    <color name="placeholder_glyph">#8FA3BA</color>
 </resources>
