@@ -5,19 +5,18 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:paddingHorizontal="16dp"
-    android:paddingVertical="10dp">
+    android:paddingHorizontal="@dimen/gutter"
+    android:paddingVertical="@dimen/space_s">
 
     <TextView
         android:id="@+id/comment_LBL_author"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:maxWidth="120dp"
+        android:layout_marginEnd="@dimen/space_s"
         android:ellipsize="end"
         android:maxLines="1"
-        android:textAppearance="@style/TextAppearance.Material3.TitleSmall"
-        android:textColor="?attr/colorOnSurface"
+        android:maxWidth="120dp"
+        android:textAppearance="@style/TextAppearance.PivotBoard.ItemTitle"
         tools:text="ori_trades" />
 
     <LinearLayout
@@ -30,8 +29,7 @@
             android:id="@+id/comment_LBL_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-            android:textColor="?attr/colorOnSurface"
+            android:textAppearance="@style/TextAppearance.PivotBoard.Body"
             tools:text="Volume confirms the move here." />
 
         <TextView
@@ -39,8 +37,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
-            android:textAppearance="@style/TextAppearance.Material3.BodySmall"
-            android:textColor="?attr/colorOnSurfaceVariant"
+            android:textAppearance="@style/TextAppearance.PivotBoard.Caption"
             tools:text="5m ago" />
     </LinearLayout>
 

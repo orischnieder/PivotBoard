@@ -8,15 +8,15 @@
     android:clickable="true"
     android:focusable="true"
     android:gravity="center_vertical"
-    android:minHeight="64dp"
+    android:minHeight="@dimen/list_item_min_height"
     android:orientation="horizontal"
-    android:paddingHorizontal="16dp"
-    android:paddingVertical="8dp">
+    android:paddingHorizontal="@dimen/gutter"
+    android:paddingVertical="@dimen/space_s">
 
     <ImageView
         android:id="@+id/user_IMG_avatar"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="@dimen/avatar_medium"
+        android:layout_height="@dimen/avatar_medium"
         android:background="@drawable/bg_avatar_circle"
         android:clipToOutline="true"
         android:contentDescription="@string/cd_author_avatar"
@@ -25,7 +25,7 @@
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
+        android:layout_marginStart="@dimen/space_m"
         android:layout_weight="1"
         android:orientation="vertical">
 
@@ -35,8 +35,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textAppearance="@style/TextAppearance.Material3.TitleSmall"
-            android:textColor="?attr/colorOnSurface"
+            android:textAppearance="@style/TextAppearance.PivotBoard.ItemTitle"
             tools:text="Ori Schnieder" />
 
         <TextView
@@ -45,8 +44,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textAppearance="@style/TextAppearance.Material3.BodySmall"
-            android:textColor="?attr/colorOnSurfaceVariant"
+            android:textAppearance="@style/TextAppearance.PivotBoard.Caption"
             tools:text="\@ori_trades" />
     </LinearLayout>
 

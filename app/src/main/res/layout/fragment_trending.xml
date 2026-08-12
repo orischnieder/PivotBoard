@@ -10,12 +10,11 @@
         android:id="@+id/trending_LBL_header"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:paddingHorizontal="16dp"
-        android:paddingTop="14dp"
-        android:paddingBottom="6dp"
+        android:paddingHorizontal="@dimen/gutter"
+        android:paddingTop="@dimen/gutter"
+        android:paddingBottom="@dimen/space_s"
         android:text="@string/trending_header"
-        android:textAppearance="@style/TextAppearance.Material3.TitleSmall"
-        android:textColor="?attr/colorOnSurfaceVariant"
+        android:textAppearance="@style/TextAppearance.PivotBoard.SectionHeader"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -56,10 +55,10 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/trending_BTN_retry"
+            style="@style/Widget.PivotBoard.Button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:minHeight="48dp"
+            android:layout_marginTop="@dimen/gutter"
             android:text="@string/action_retry"
             android:visibility="gone" />
     </LinearLayout>
@@ -78,8 +77,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"
-            android:paddingTop="4dp"
-            android:paddingBottom="12dp" />
+            android:paddingTop="@dimen/list_padding_vertical"
+            android:paddingBottom="@dimen/list_padding_bottom" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

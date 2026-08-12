@@ -21,7 +21,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:paddingHorizontal="32dp"
+        android:paddingHorizontal="@dimen/empty_state_padding"
         android:text="@string/profile_error_load"
         android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
         android:textColor="?attr/colorOnSurfaceVariant"
@@ -45,7 +45,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingBottom="16dp">
+            android:paddingBottom="@dimen/gutter">
 
             <!-- Header -->
             <LinearLayout
@@ -53,13 +53,13 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:paddingHorizontal="16dp"
-                android:paddingTop="20dp">
+                android:paddingHorizontal="@dimen/gutter"
+                android:paddingTop="@dimen/space_xl">
 
                 <FrameLayout
                     android:id="@+id/profile_LAY_avatar"
-                    android:layout_width="80dp"
-                    android:layout_height="80dp">
+                    android:layout_width="@dimen/avatar_large"
+                    android:layout_height="@dimen/avatar_large">
 
                     <ImageView
                         android:id="@+id/profile_IMG_avatar"
@@ -79,7 +79,7 @@
                         android:indeterminate="false"
                         android:visibility="gone"
                         app:indicatorSize="52dp"
-                        app:trackThickness="4dp"
+                        app:trackThickness="@dimen/space_xs"
                         tools:visibility="visible" />
 
                     <!-- Own profile only; enabled in code. -->
@@ -101,7 +101,7 @@
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
+                    android:layout_marginStart="@dimen/gutter"
                     android:layout_weight="1"
                     android:orientation="horizontal">
 
@@ -116,16 +116,14 @@
                             android:id="@+id/profile_LBL_posts_count"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
-                            android:textColor="?attr/colorOnSurface"
+                            android:textAppearance="@style/TextAppearance.PivotBoard.MetricValue"
                             tools:text="12" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/profile_label_posts"
-                            android:textAppearance="@style/TextAppearance.Material3.BodySmall"
-                            android:textColor="?attr/colorOnSurfaceVariant" />
+                            android:textAppearance="@style/TextAppearance.PivotBoard.Caption" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -137,24 +135,22 @@
                         android:clickable="true"
                         android:focusable="true"
                         android:gravity="center_horizontal"
-                        android:minHeight="48dp"
+                        android:minHeight="@dimen/touch_target_min"
                         android:orientation="vertical"
-                        android:paddingVertical="4dp">
+                        android:paddingVertical="@dimen/space_xs">
 
                         <TextView
                             android:id="@+id/profile_LBL_followers_count"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
-                            android:textColor="?attr/colorOnSurface"
+                            android:textAppearance="@style/TextAppearance.PivotBoard.MetricValue"
                             tools:text="48" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/profile_label_followers"
-                            android:textAppearance="@style/TextAppearance.Material3.BodySmall"
-                            android:textColor="?attr/colorOnSurfaceVariant" />
+                            android:textAppearance="@style/TextAppearance.PivotBoard.Caption" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -166,24 +162,22 @@
                         android:clickable="true"
                         android:focusable="true"
                         android:gravity="center_horizontal"
-                        android:minHeight="48dp"
+                        android:minHeight="@dimen/touch_target_min"
                         android:orientation="vertical"
-                        android:paddingVertical="4dp">
+                        android:paddingVertical="@dimen/space_xs">
 
                         <TextView
                             android:id="@+id/profile_LBL_following_count"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
-                            android:textColor="?attr/colorOnSurface"
+                            android:textAppearance="@style/TextAppearance.PivotBoard.MetricValue"
                             tools:text="7" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/profile_label_following"
-                            android:textAppearance="@style/TextAppearance.Material3.BodySmall"
-                            android:textColor="?attr/colorOnSurfaceVariant" />
+                            android:textAppearance="@style/TextAppearance.PivotBoard.Caption" />
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
@@ -192,30 +186,27 @@
                 android:id="@+id/profile_LBL_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingHorizontal="16dp"
-                android:paddingTop="16dp"
-                android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
-                android:textColor="?attr/colorOnSurface"
+                android:paddingHorizontal="@dimen/gutter"
+                android:paddingTop="@dimen/gutter"
+                android:textAppearance="@style/TextAppearance.PivotBoard.MetricValue"
                 tools:text="Ori Schnieder" />
 
             <TextView
                 android:id="@+id/profile_LBL_username"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingHorizontal="16dp"
+                android:paddingHorizontal="@dimen/gutter"
                 android:paddingTop="2dp"
-                android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-                android:textColor="?attr/colorOnSurfaceVariant"
+                android:textAppearance="@style/TextAppearance.PivotBoard.StateBody"
                 tools:text="\@ori_trades" />
 
             <TextView
                 android:id="@+id/profile_LBL_bio"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingHorizontal="16dp"
-                android:paddingTop="8dp"
-                android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-                android:textColor="?attr/colorOnSurface"
+                android:paddingHorizontal="@dimen/gutter"
+                android:paddingTop="@dimen/space_s"
+                android:textAppearance="@style/TextAppearance.PivotBoard.Body"
                 android:visibility="gone"
                 tools:text="Trading episodic pivots since 2021."
                 tools:visibility="visible" />
@@ -223,49 +214,44 @@
             <!-- Follow / Unfollow, or Edit profile on your own page -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/profile_BTN_action"
+                style="@style/Widget.PivotBoard.Button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp"
-                android:layout_marginTop="16dp"
-                android:minHeight="48dp"
-                app:cornerRadius="12dp"
+                android:layout_marginHorizontal="@dimen/gutter"
+                android:layout_marginTop="@dimen/gutter"
                 tools:text="Follow" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/profile_BTN_watchlist"
-                style="@style/Widget.Material3.Button.OutlinedButton"
+                style="@style/Widget.PivotBoard.Button.Outlined"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp"
-                android:layout_marginTop="8dp"
-                android:minHeight="48dp"
-                android:text="@string/watchlist_action_view"
-                app:cornerRadius="12dp" />
+                android:layout_marginHorizontal="@dimen/gutter"
+                android:layout_marginTop="@dimen/space_s"
+                android:text="@string/watchlist_action_view" />
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="16dp"
+                android:layout_height="@dimen/divider_height"
+                android:layout_marginTop="@dimen/gutter"
                 android:background="?attr/colorOutlineVariant" />
 
             <TextView
                 android:id="@+id/profile_LBL_posts_header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingHorizontal="16dp"
-                android:paddingTop="16dp"
+                android:paddingHorizontal="@dimen/gutter"
+                android:paddingTop="@dimen/gutter"
                 android:text="@string/profile_posts_header"
-                android:textAppearance="@style/TextAppearance.Material3.TitleSmall"
-                android:textColor="?attr/colorOnSurface" />
+                android:textAppearance="@style/TextAppearance.PivotBoard.SectionHeader" />
 
             <TextView
                 android:id="@+id/profile_LBL_no_posts"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingHorizontal="16dp"
-                android:paddingTop="12dp"
-                android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-                android:textColor="?attr/colorOnSurfaceVariant"
+                android:paddingHorizontal="@dimen/gutter"
+                android:paddingTop="@dimen/space_m"
+                android:textAppearance="@style/TextAppearance.PivotBoard.StateBody"
                 android:visibility="gone"
                 tools:text="No posts yet." />
 
@@ -273,7 +259,7 @@
                 android:id="@+id/profile_RV_posts"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
+                android:layout_marginTop="@dimen/list_padding_vertical"
                 android:nestedScrollingEnabled="false" />
 
         </LinearLayout>

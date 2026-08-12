@@ -9,10 +9,10 @@
     android:clickable="true"
     android:focusable="true"
     android:gravity="center_vertical"
-    android:minHeight="64dp"
+    android:minHeight="@dimen/list_item_min_height"
     android:orientation="horizontal"
-    android:paddingHorizontal="16dp"
-    android:paddingVertical="10dp">
+    android:paddingHorizontal="@dimen/gutter"
+    android:paddingVertical="@dimen/space_s">
 
     <ImageView
         android:id="@+id/notif_IMG_type"
@@ -25,7 +25,7 @@
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="14dp"
+        android:layout_marginStart="@dimen/space_m"
         android:layout_weight="1"
         android:orientation="vertical">
 
@@ -33,8 +33,7 @@
             android:id="@+id/notif_LBL_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-            android:textColor="?attr/colorOnSurface"
+            android:textAppearance="@style/TextAppearance.PivotBoard.Body"
             tools:text="ori_trades liked your post" />
 
         <TextView
@@ -42,8 +41,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
-            android:textAppearance="@style/TextAppearance.Material3.BodySmall"
-            android:textColor="?attr/colorOnSurfaceVariant"
+            android:textAppearance="@style/TextAppearance.PivotBoard.Caption"
             tools:text="5m ago" />
     </LinearLayout>
 
@@ -52,7 +50,7 @@
         android:id="@+id/notif_LAY_unread"
         android:layout_width="10dp"
         android:layout_height="10dp"
-        android:layout_marginStart="12dp"
+        android:layout_marginStart="@dimen/space_m"
         android:background="@drawable/bg_unread_dot" />
 
 </LinearLayout>

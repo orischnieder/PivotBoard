@@ -1,57 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/trending_CARD_root"
+    style="@style/Widget.PivotBoard.Card"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginHorizontal="12dp"
-    android:layout_marginVertical="4dp"
-    android:clickable="true"
-    android:focusable="true"
-    android:foreground="?attr/selectableItemBackground"
-    app:cardBackgroundColor="?attr/colorSurface"
-    app:cardCornerRadius="12dp"
-    app:cardElevation="1dp">
+    android:layout_height="wrap_content">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        android:minHeight="64dp"
+        android:minHeight="@dimen/list_item_min_height"
         android:orientation="horizontal"
-        android:paddingHorizontal="16dp"
-        android:paddingVertical="10dp">
+        android:paddingHorizontal="@dimen/card_padding"
+        android:paddingVertical="@dimen/space_s">
 
         <TextView
             android:id="@+id/trending_LBL_rank"
             android:layout_width="28dp"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
-            android:textColor="?attr/colorOnSurfaceVariant"
+            android:textAppearance="@style/TextAppearance.PivotBoard.Rank"
             tools:text="1" />
 
         <TextView
             android:id="@+id/trending_LBL_ticker"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:background="@drawable/bg_chip_ticker"
-            android:paddingHorizontal="10dp"
-            android:paddingVertical="4dp"
-            android:textAppearance="@style/TextAppearance.PivotBoard.Ticker"
-            android:textColor="?attr/colorOnPrimaryContainer"
+            style="@style/Widget.PivotBoard.Chip.Ticker"
+            android:layout_marginStart="@dimen/space_m"
             tools:text="NVDA" />
 
         <TextView
             android:id="@+id/trending_LBL_summary"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
+            android:layout_marginStart="@dimen/space_m"
             android:layout_weight="1"
-            android:textAppearance="@style/TextAppearance.Material3.BodySmall"
-            android:textColor="?attr/colorOnSurfaceVariant"
+            android:textAppearance="@style/TextAppearance.PivotBoard.Caption"
             tools:text="4 posts · 3 traders" />
 
     </LinearLayout>

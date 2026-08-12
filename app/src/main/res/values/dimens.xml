@@ -18,8 +18,9 @@
     <dimen name="gutter_wide">24dp</dimen>
 
     <!--
-      Cards: outer margin + inner padding are chosen so card content lands on the same
-      16dp optical gutter as non-card screens (12 + 4 = 16 to the card edge's content box).
+      Cards. A card is inset from the screen gutter by design, so its interior does not
+      align with full-bleed screen content — what matters is that every card in the app
+      uses the same margin and the same padding. Previously these ranged 12+12 to 12+16.
     -->
     <dimen name="card_margin_horizontal">12dp</dimen>
     <dimen name="card_margin_vertical">6dp</dimen>

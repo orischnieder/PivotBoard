@@ -36,6 +36,21 @@
         <item name="android:textColor">?attr/colorOnSurface</item>
     </style>
 
+    <!-- Primary reading text: post notes, comment bodies, notification lines, bios. -->
+    <style name="TextAppearance.PivotBoard.Body" parent="TextAppearance.Material3.BodyMedium">
+        <item name="android:textColor">?attr/colorOnSurface</item>
+    </style>
+
+    <!-- Profile counters. A number being reported, not a title. -->
+    <style name="TextAppearance.PivotBoard.MetricValue" parent="TextAppearance.Material3.TitleMedium">
+        <item name="android:textColor">?attr/colorOnSurface</item>
+    </style>
+
+    <!-- Trending position. Same size as a metric but deliberately recessive. -->
+    <style name="TextAppearance.PivotBoard.Rank" parent="TextAppearance.Material3.TitleMedium">
+        <item name="android:textColor">?attr/colorOnSurfaceVariant</item>
+    </style>
+
     <!-- Empty / error / idle states. Used together as a title + body pair. -->
     <style name="TextAppearance.PivotBoard.StateTitle" parent="TextAppearance.Material3.TitleMedium">
         <item name="android:textColor">?attr/colorOnSurface</item>

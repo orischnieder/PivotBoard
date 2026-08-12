@@ -19,8 +19,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"
-            android:paddingTop="6dp"
-            android:paddingBottom="12dp" />
+            android:paddingTop="@dimen/list_padding_vertical"
+            android:paddingBottom="@dimen/list_padding_bottom" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <!-- Loading: only shown for the initial load; refreshes use the swipe spinner. -->
@@ -42,7 +42,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="vertical"
-        android:paddingHorizontal="32dp"
+        android:paddingHorizontal="@dimen/empty_state_padding"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -51,8 +51,8 @@
 
         <ImageView
             android:id="@+id/postlist_IMG_empty"
-            android:layout_width="72dp"
-            android:layout_height="72dp"
+            android:layout_width="@dimen/empty_state_icon"
+            android:layout_height="@dimen/empty_state_icon"
             android:alpha="0.4"
             android:contentDescription="@null"
             android:src="@drawable/ic_empty_feed"
@@ -62,19 +62,17 @@
             android:id="@+id/postlist_LBL_empty_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="@dimen/gutter"
             android:gravity="center"
-            android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
-            android:textColor="?attr/colorOnSurface" />
+            android:textAppearance="@style/TextAppearance.PivotBoard.StateTitle" />
 
         <TextView
             android:id="@+id/postlist_LBL_empty_body"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
+            android:layout_marginTop="@dimen/space_s"
             android:gravity="center"
-            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-            android:textColor="?attr/colorOnSurfaceVariant" />
+            android:textAppearance="@style/TextAppearance.PivotBoard.StateBody" />
     </LinearLayout>
 
     <!-- Error state -->
@@ -84,7 +82,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="vertical"
-        android:paddingHorizontal="32dp"
+        android:paddingHorizontal="@dimen/empty_state_padding"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -102,10 +100,10 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/postlist_BTN_retry"
+            style="@style/Widget.PivotBoard.Button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:minHeight="48dp"
+            android:layout_marginTop="@dimen/gutter"
             android:text="@string/action_retry" />
     </LinearLayout>
 

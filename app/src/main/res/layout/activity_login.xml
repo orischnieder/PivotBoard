@@ -21,8 +21,8 @@
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:orientation="vertical"
-            android:paddingHorizontal="24dp"
-            android:paddingVertical="32dp">
+            android:paddingHorizontal="@dimen/gutter_wide"
+            android:paddingVertical="@dimen/space_xxl">
 
             <Space
                 android:layout_width="match_parent"
@@ -40,7 +40,7 @@
                 android:id="@+id/login_LBL_welcome"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="@dimen/space_xl"
                 android:gravity="center"
                 android:text="@string/login_welcome"
                 android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"
@@ -50,7 +50,7 @@
                 android:id="@+id/login_LBL_subtitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="@dimen/space_s"
                 android:gravity="center"
                 android:text="@string/login_sign_in"
                 android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
@@ -58,19 +58,18 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/login_BTN_signin"
+                style="@style/Widget.PivotBoard.Button.Large"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="40dp"
-                android:minHeight="56dp"
                 android:text="@string/login_sign_in"
-                android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
-                app:cornerRadius="16dp" />
+                android:textAppearance="@style/TextAppearance.Material3.TitleMedium" />
 
             <com.google.android.material.progressindicator.CircularProgressIndicator
                 android:id="@+id/login_PRG_loading"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="@dimen/space_xl"
                 android:indeterminate="true"
                 android:visibility="gone" />
 
@@ -79,20 +78,19 @@
                 android:layout_height="0dp"
                 android:layout_weight="1" />
 
+            <!-- Margin is modest: the weighted Space above already separates this from the CTA. -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/login_CARD_disclaimer"
+                style="@style/Widget.PivotBoard.Card.Panel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="40dp"
-                app:cardBackgroundColor="?attr/colorSurfaceContainer"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="0dp">
+                android:layout_marginTop="@dimen/space_xl">
 
                 <TextView
                     android:id="@+id/login_LBL_disclaimer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="16dp"
+                    android:padding="@dimen/gutter"
                     android:text="@string/disclaimer_not_advice"
                     android:textAppearance="@style/TextAppearance.PivotBoard.Disclaimer" />
             </com.google.android.material.card.MaterialCardView>
