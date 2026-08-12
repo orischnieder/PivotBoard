@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  Camera badge on your own avatar. Uses the brand green rather than primary: in dark mode
+  primary is a pale tint, which made the badge look washed out against the photo.
+-->
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="oval">
-    <solid android:color="?attr/colorPrimary" />
+    <solid android:color="?attr/colorSecondary" />
 </shape>

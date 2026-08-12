@@ -78,7 +78,7 @@
                         android:padding="5dp"
                         android:src="@drawable/ic_camera"
                         android:visibility="gone"
-                        app:tint="?attr/colorOnPrimary"
+                        app:tint="?attr/colorOnSecondary"
                         tools:visibility="visible" />
                 </FrameLayout>
 
@@ -90,12 +90,18 @@
                     android:layout_weight="1"
                     android:orientation="horizontal">
 
+                    <!--
+                      Not clickable, unlike the two beside it, but it carries the same
+                      padding and min height so all three numbers share a baseline.
+                    -->
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="center_horizontal"
-                        android:orientation="vertical">
+                        android:minHeight="@dimen/touch_target_min"
+                        android:orientation="vertical"
+                        android:paddingVertical="@dimen/space_xs">
 
                         <TextView
                             android:id="@+id/profile_LBL_posts_count"
@@ -206,13 +212,18 @@
                 android:layout_marginTop="@dimen/gutter"
                 tools:text="Follow" />
 
+            <!--
+              Secondary to the follow action above, so it is a centred text button rather
+              than a second full-width bar - two stacked filled-width buttons read as two
+              equally important choices.
+            -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/profile_BTN_watchlist"
-                style="@style/Widget.PivotBoard.Button.Outlined"
-                android:layout_width="match_parent"
+                style="@style/Widget.PivotBoard.Button.Text"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/gutter"
-                android:layout_marginTop="@dimen/space_s"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/space_xs"
                 android:text="@string/watchlist_action_view" />
 
             <View
@@ -242,12 +253,18 @@
                 android:visibility="gone"
                 tools:text="No posts yet." />
 
+            <!--
+              4dp + the card's own 12dp margin puts the card edge on this screen's 16dp
+              gutter, so the posts line up with the name and headers above them.
+            -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/profile_RV_posts"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/list_padding_vertical"
-                android:nestedScrollingEnabled="false" />
+                android:clipToPadding="false"
+                android:nestedScrollingEnabled="false"
+                android:paddingHorizontal="@dimen/space_xs" />
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

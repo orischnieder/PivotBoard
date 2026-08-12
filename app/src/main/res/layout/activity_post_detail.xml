@@ -204,48 +204,63 @@
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
-    <!-- Add comment -->
+    <!--
+      Add comment. The divider lives inside this container rather than as a sibling so a
+      single visibility toggle covers both - otherwise a stray rule would hang over an
+      empty screen while the post is still loading.
+    -->
     <LinearLayout
         android:id="@+id/detail_LAY_compose"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="?attr/colorSurface"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingHorizontal="@dimen/space_m"
-        android:paddingVertical="@dimen/space_s"
+        android:orientation="vertical"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/detail_LAY_comment"
-            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:hint="@string/detail_hint_comment">
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/divider_height"
+            android:background="?attr/colorOutlineVariant" />
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/detail_EDT_comment"
-                android:layout_width="match_parent"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingHorizontal="@dimen/space_m"
+            android:paddingVertical="@dimen/space_s">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/detail_LAY_comment"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:imeOptions="actionSend"
-                android:inputType="textCapSentences|textMultiLine"
-                android:maxLines="4" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:layout_weight="1"
+                android:hint="@string/detail_hint_comment">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/detail_BTN_send"
-            style="@style/Widget.Material3.Button.IconButton.Filled"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/space_s"
-            android:contentDescription="@string/detail_action_send"
-            android:minWidth="@dimen/touch_target_min"
-            android:minHeight="@dimen/touch_target_min"
-            app:icon="@drawable/ic_send" />
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/detail_EDT_comment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:imeOptions="actionSend"
+                    android:inputType="textCapSentences|textMultiLine"
+                    android:maxLines="4" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/detail_BTN_send"
+                style="@style/Widget.Material3.Button.IconButton.Filled"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/space_s"
+                android:contentDescription="@string/detail_action_send"
+                android:minWidth="@dimen/touch_target_min"
+                android:minHeight="@dimen/touch_target_min"
+                app:icon="@drawable/ic_send" />
+        </LinearLayout>
 
     </LinearLayout>
 
