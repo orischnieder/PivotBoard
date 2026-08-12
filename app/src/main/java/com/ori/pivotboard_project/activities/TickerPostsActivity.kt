@@ -16,6 +16,10 @@ import com.ori.pivotboard_project.utilities.applySystemBarPadding
 import com.ori.pivotboard_project.utilities.AuthManager
 import com.ori.pivotboard_project.utilities.Constants
 import com.ori.pivotboard_project.utilities.DatabaseManager
+import com.ori.pivotboard_project.utilities.hide
+import com.ori.pivotboard_project.utilities.showEmpty
+import com.ori.pivotboard_project.utilities.showError
+import com.ori.pivotboard_project.utilities.showLoading
 
 /**
  * Every setup posted for one ticker - the "tapping a ticker filters the feed to it" half of
@@ -55,15 +59,15 @@ class TickerPostsActivity : AppCompatActivity() {
     }
 
     private fun loadPosts() {
-        binding.tickerPRGLoading.visibility = View.VISIBLE
+        binding.tickerRVPosts.visibility = View.GONE
+        binding.tickerLAYState.showLoading()
 
         DatabaseManager.getInstance().loadPostsByTicker(ticker) { posts, _ ->
             if (isFinishing || isDestroyed) return@loadPostsByTicker
-            binding.tickerPRGLoading.visibility = View.GONE
 
             when {
-                posts == null -> showMessage(R.string.ticker_error)
-                posts.isEmpty() -> showMessage(R.string.ticker_empty)
+                posts == null -> showError()
+                posts.isEmpty() -> showEmpty()
                 else -> attachLikeStates(posts)
             }
         }
@@ -75,14 +79,25 @@ class TickerPostsActivity : AppCompatActivity() {
             if (isFinishing || isDestroyed) return@fetchLikedPostIds
             postAdapter.setData(posts, likedIds)
             binding.tickerRVPosts.visibility = View.VISIBLE
-            binding.tickerLBLMessage.visibility = View.GONE
+            binding.tickerLAYState.hide()
         }
     }
 
-    private fun showMessage(messageId: Int) {
+    private fun showEmpty() {
         binding.tickerRVPosts.visibility = View.GONE
-        binding.tickerLBLMessage.visibility = View.VISIBLE
-        binding.tickerLBLMessage.setText(messageId)
+        binding.tickerLAYState.showEmpty(
+            icon = R.drawable.ic_empty_feed,
+            title = R.string.ticker_empty_title,
+            body = R.string.ticker_empty
+        )
+    }
+
+    private fun showError() {
+        binding.tickerRVPosts.visibility = View.GONE
+        binding.tickerLAYState.showError(
+            body = R.string.ticker_error,
+            onRetry = { loadPosts() }
+        )
     }
 
     companion object {

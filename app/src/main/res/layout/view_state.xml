@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  The one loading / empty / error surface, included by every list screen.
+
+  Every child starts gone; the extension functions in utilities/StateView.kt turn on the
+  pieces a given state needs. Empty and error deliberately look different: an empty state
+  is a neutral glyph with no action, an error is an error-tinted glyph with a Retry.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/state_LAY_root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:paddingHorizontal="@dimen/empty_state_padding"
+    android:visibility="gone"
+    tools:visibility="visible">
+
+    <com.google.android.material.progressindicator.CircularProgressIndicator
+        android:id="@+id/state_PRG_loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
+    <ImageView
+        android:id="@+id/state_IMG_icon"
+        android:layout_width="@dimen/empty_state_icon"
+        android:layout_height="@dimen/empty_state_icon"
+        android:contentDescription="@null"
+        android:visibility="gone"
+        app:tint="?attr/colorOnSurfaceVariant"
+        tools:src="@drawable/ic_empty_feed"
+        tools:visibility="visible" />
+
+    <TextView
+        android:id="@+id/state_LBL_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/gutter"
+        android:gravity="center"
+        android:textAppearance="@style/TextAppearance.PivotBoard.StateTitle"
+        android:visibility="gone"
+        tools:text="No setups yet"
+        tools:visibility="visible" />
+
+    <TextView
+        android:id="@+id/state_LBL_body"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_s"
+        android:gravity="center"
+        android:textAppearance="@style/TextAppearance.PivotBoard.StateBody"
+        android:visibility="gone"
+        tools:text="Be the first to post a setup from the Post tab."
+        tools:visibility="visible" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/state_BTN_action"
+        style="@style/Widget.PivotBoard.Button.Outlined"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_xl"
+        android:text="@string/action_retry"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
+</LinearLayout>

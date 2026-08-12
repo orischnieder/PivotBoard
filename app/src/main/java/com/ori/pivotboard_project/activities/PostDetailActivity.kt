@@ -24,6 +24,9 @@ import com.ori.pivotboard_project.utilities.DatabaseManager
 import com.ori.pivotboard_project.utilities.ImageLoader
 import com.ori.pivotboard_project.utilities.SignalManager
 import com.ori.pivotboard_project.utilities.TimeFormatter
+import com.ori.pivotboard_project.utilities.hide
+import com.ori.pivotboard_project.utilities.showError
+import com.ori.pivotboard_project.utilities.showLoading
 
 /**
  * Section 5.4 - the full post with its likes and comments.
@@ -299,21 +302,23 @@ class PostDetailActivity : AppCompatActivity(), CommentCallback {
     // --------------------------------------------------------------- States
 
     private fun setLoading(loading: Boolean) {
-        binding.detailPRGLoading.visibility = if (loading) View.VISIBLE else View.GONE
+        if (loading) binding.detailLAYState.showLoading() else binding.detailLAYState.hide()
     }
 
     private fun showContent() {
-        setLoading(false)
+        binding.detailLAYState.hide()
         binding.detailLAYContent.visibility = View.VISIBLE
         binding.detailLAYCompose.visibility = View.VISIBLE
-        binding.detailLBLError.visibility = View.GONE
     }
 
+    /**
+     * No retry: the usual cause is a deleted post, so re-running the same fetch would just
+     * fail again. Backing out is the only sensible move.
+     */
     private fun showError() {
-        setLoading(false)
         binding.detailLAYContent.visibility = View.GONE
         binding.detailLAYCompose.visibility = View.GONE
-        binding.detailLBLError.visibility = View.VISIBLE
+        binding.detailLAYState.showError(body = R.string.detail_error_load)
     }
 
     companion object {

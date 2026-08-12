@@ -19,31 +19,15 @@
         app:navigationIcon="@drawable/ic_arrow_back"
         app:titleTextColor="?attr/colorOnSurface" />
 
-    <com.google.android.material.progressindicator.CircularProgressIndicator
-        android:id="@+id/ticker_PRG_loading"
-        android:layout_width="wrap_content"
+    <include
+        android:id="@+id/ticker_LAY_state"
+        layout="@layout/view_state"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:indeterminate="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/ticker_TB_toolbar" />
-
-    <TextView
-        android:id="@+id/ticker_LBL_message"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:paddingHorizontal="@dimen/empty_state_padding"
-        android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
-        android:textColor="?attr/colorOnSurfaceVariant"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ticker_TB_toolbar"
-        tools:text="No setups posted for this ticker yet."
-        tools:visibility="visible" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/ticker_RV_posts"

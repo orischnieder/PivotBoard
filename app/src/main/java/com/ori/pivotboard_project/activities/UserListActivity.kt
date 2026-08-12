@@ -15,6 +15,10 @@ import com.ori.pivotboard_project.model.User
 import com.ori.pivotboard_project.utilities.applySystemBarPadding
 import com.ori.pivotboard_project.utilities.Constants
 import com.ori.pivotboard_project.utilities.DatabaseManager
+import com.ori.pivotboard_project.utilities.hide
+import com.ori.pivotboard_project.utilities.showEmpty
+import com.ori.pivotboard_project.utilities.showError
+import com.ori.pivotboard_project.utilities.showLoading
 
 /**
  * A browsable follower / following list, reached by tapping either count on a profile.
@@ -60,38 +64,45 @@ class UserListActivity : AppCompatActivity(), UserCallback {
 
     private fun loadUsers() {
         if (targetUid.isEmpty()) {
-            showMessage(R.string.userlist_error)
+            showError()
             return
         }
-        binding.userlistPRGLoading.visibility = View.VISIBLE
+        binding.userlistRVUsers.visibility = View.GONE
+        binding.userlistLAYState.showLoading()
 
         DatabaseManager.getInstance().loadFollowList(
             uid = targetUid,
             followers = mode == Mode.FOLLOWERS
         ) { users, _ ->
             if (isFinishing || isDestroyed) return@loadFollowList
-            binding.userlistPRGLoading.visibility = View.GONE
 
             when {
-                users == null -> showMessage(R.string.userlist_error)
-                users.isEmpty() -> showMessage(
-                    if (mode == Mode.FOLLOWERS) R.string.userlist_empty_followers
-                    else R.string.userlist_empty_following
-                )
-
+                users == null -> showError()
+                users.isEmpty() -> showEmpty()
                 else -> {
                     userAdapter.setData(users)
                     binding.userlistRVUsers.visibility = View.VISIBLE
-                    binding.userlistLBLMessage.visibility = View.GONE
+                    binding.userlistLAYState.hide()
                 }
             }
         }
     }
 
-    private fun showMessage(messageId: Int) {
+    private fun showEmpty() {
         binding.userlistRVUsers.visibility = View.GONE
-        binding.userlistLBLMessage.visibility = View.VISIBLE
-        binding.userlistLBLMessage.setText(messageId)
+        binding.userlistLAYState.showEmpty(
+            icon = R.drawable.ic_state_people,
+            title = if (mode == Mode.FOLLOWERS) R.string.userlist_empty_followers
+            else R.string.userlist_empty_following
+        )
+    }
+
+    private fun showError() {
+        binding.userlistRVUsers.visibility = View.GONE
+        binding.userlistLAYState.showError(
+            body = R.string.userlist_error,
+            onRetry = { loadUsers() }
+        )
     }
 
     override fun onUserClicked(user: User, position: Int) =

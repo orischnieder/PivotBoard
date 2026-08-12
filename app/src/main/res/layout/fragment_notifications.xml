@@ -6,7 +6,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- Only shown while something is unread. -->
+    <!--
+      Shown while something is unread. Toggled INVISIBLE rather than GONE so the header
+      strip keeps its height and the list underneath does not jump as unread state changes.
+    -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/notifications_BTN_mark_all"
         style="@style/Widget.PivotBoard.Button.Text"
@@ -14,35 +17,9 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/space_s"
         android:text="@string/notif_mark_all_read"
-        android:visibility="gone"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:visibility="visible" />
-
-    <com.google.android.material.progressindicator.CircularProgressIndicator
-        android:id="@+id/notifications_PRG_loading"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:indeterminate="true"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/notifications_LBL_message"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:paddingHorizontal="@dimen/empty_state_padding"
-        android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
-        android:textColor="?attr/colorOnSurfaceVariant"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="@string/notif_empty"
         tools:visibility="visible" />
 
     <androidx.recyclerview.widget.RecyclerView
@@ -50,10 +27,21 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:clipToPadding="false"
+        android:paddingTop="@dimen/list_padding_vertical"
         android:paddingBottom="@dimen/list_padding_bottom"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/notifications_BTN_mark_all" />
+
+    <include
+        android:id="@+id/notifications_LAY_state"
+        layout="@layout/view_state"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

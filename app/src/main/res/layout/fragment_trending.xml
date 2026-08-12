@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/trending_LAY_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -18,50 +17,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <com.google.android.material.progressindicator.CircularProgressIndicator
-        android:id="@+id/trending_PRG_loading"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:indeterminate="true"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/trending_LBL_header" />
-
-    <LinearLayout
-        android:id="@+id/trending_LAY_message"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:paddingHorizontal="32dp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/trending_LBL_header"
-        tools:visibility="visible">
-
-        <TextView
-            android:id="@+id/trending_LBL_message"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
-            android:textColor="?attr/colorOnSurfaceVariant"
-            tools:text="@string/trending_empty" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/trending_BTN_retry"
-            style="@style/Widget.PivotBoard.Button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/gutter"
-            android:text="@string/action_retry"
-            android:visibility="gone" />
-    </LinearLayout>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/trending_LAY_swipe"
@@ -80,5 +35,15 @@
             android:paddingTop="@dimen/list_padding_vertical"
             android:paddingBottom="@dimen/list_padding_bottom" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <include
+        android:id="@+id/trending_LAY_state"
+        layout="@layout/view_state"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/trending_LBL_header" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

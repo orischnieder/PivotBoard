@@ -13,6 +13,10 @@ import com.ori.pivotboard_project.databinding.FragmentPostListBinding
 import com.ori.pivotboard_project.model.Post
 import com.ori.pivotboard_project.utilities.AuthManager
 import com.ori.pivotboard_project.utilities.DatabaseManager
+import com.ori.pivotboard_project.utilities.hide
+import com.ori.pivotboard_project.utilities.showEmpty
+import com.ori.pivotboard_project.utilities.showError
+import com.ori.pivotboard_project.utilities.showLoading
 
 /**
  * One page of the feed. Both tabs use this same fragment - only [mode] differs, which keeps
@@ -50,7 +54,6 @@ class PostListFragment : Fragment() {
         binding.postlistRVPosts.adapter = adapter
 
         binding.postlistLAYSwipe.setOnRefreshListener { loadFeed(isRefresh = true) }
-        binding.postlistBTNRetry.setOnClickListener { loadFeed(isRefresh = false) }
 
         loadFeed(isRefresh = false)
     }
@@ -92,36 +95,39 @@ class PostListFragment : Fragment() {
 
     // ------------------------------------------------------------- States
 
-    private fun showLoading() = setState(loading = true)
-
-    private fun showContent() = setState(content = true)
-
-    private fun showError() = setState(error = true)
-
-    private fun showEmpty() {
+    private fun showLoading() {
         val binding = this.binding ?: return
-        setState(empty = true)
+        binding.postlistLAYSwipe.visibility = View.GONE
+        binding.postlistLAYState.showLoading()
+    }
 
-        val isFollowing = mode == Mode.FOLLOWING
-        binding.postlistLBLEmptyTitle.setText(
-            if (isFollowing) R.string.feed_empty_following_title else R.string.feed_empty_discover_title
-        )
-        binding.postlistLBLEmptyBody.setText(
-            if (isFollowing) R.string.feed_empty_following_body else R.string.feed_empty_discover_body
+    private fun showContent() {
+        val binding = this.binding ?: return
+        binding.postlistLAYSwipe.visibility = View.VISIBLE
+        binding.postlistLAYState.hide()
+    }
+
+    private fun showError() {
+        val binding = this.binding ?: return
+        binding.postlistLAYSwipe.visibility = View.GONE
+        binding.postlistLAYState.showError(
+            body = R.string.error_feed_load,
+            onRetry = { loadFeed(isRefresh = false) }
         )
     }
 
-    private fun setState(
-        loading: Boolean = false,
-        content: Boolean = false,
-        empty: Boolean = false,
-        error: Boolean = false
-    ) {
+    private fun showEmpty() {
         val binding = this.binding ?: return
-        binding.postlistPRGLoading.visibility = if (loading) View.VISIBLE else View.GONE
-        binding.postlistLAYSwipe.visibility = if (content) View.VISIBLE else View.GONE
-        binding.postlistLAYEmpty.visibility = if (empty) View.VISIBLE else View.GONE
-        binding.postlistLAYError.visibility = if (error) View.VISIBLE else View.GONE
+        binding.postlistLAYSwipe.visibility = View.GONE
+
+        val isFollowing = mode == Mode.FOLLOWING
+        binding.postlistLAYState.showEmpty(
+            icon = R.drawable.ic_empty_feed,
+            title = if (isFollowing) R.string.feed_empty_following_title
+            else R.string.feed_empty_discover_title,
+            body = if (isFollowing) R.string.feed_empty_following_body
+            else R.string.feed_empty_discover_body
+        )
     }
 
     override fun onDestroyView() {

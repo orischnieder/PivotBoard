@@ -18,6 +18,10 @@ import com.ori.pivotboard_project.utilities.AuthManager
 import com.ori.pivotboard_project.utilities.Constants
 import com.ori.pivotboard_project.utilities.DatabaseManager
 import com.ori.pivotboard_project.utilities.SignalManager
+import com.ori.pivotboard_project.utilities.hide
+import com.ori.pivotboard_project.utilities.showEmpty
+import com.ori.pivotboard_project.utilities.showError
+import com.ori.pivotboard_project.utilities.showLoading
 
 /**
  * Likes, comments and new followers, newest first.
@@ -64,25 +68,29 @@ class NotificationsFragment : Fragment(), NotificationCallback {
     }
 
     private fun listenToNotifications() {
+        // Retry re-enters here, so drop any existing listener rather than orphaning it.
+        registration?.remove()
+        registration = null
+
         val uid = AuthManager.getInstance().currentUid()
         if (uid.isEmpty()) {
-            showMessage(R.string.notif_error)
+            showError()
             return
         }
-        binding?.notificationsPRGLoading?.visibility = View.VISIBLE
+        binding?.notificationsRVItems?.visibility = View.GONE
+        binding?.notificationsLAYState?.showLoading()
 
         registration = DatabaseManager.getInstance().listenToNotifications(
             uid = uid,
             onChange = { notifications ->
                 val binding = this.binding ?: return@listenToNotifications
-                binding.notificationsPRGLoading.visibility = View.GONE
 
                 if (notifications.isEmpty()) {
-                    showMessage(R.string.notif_empty)
+                    showEmpty()
                 } else {
                     notificationAdapter.setData(notifications)
                     binding.notificationsRVItems.visibility = View.VISIBLE
-                    binding.notificationsLBLMessage.visibility = View.GONE
+                    binding.notificationsLAYState.hide()
                 }
                 bindMarkAllButton(notifications)
             },
@@ -92,8 +100,7 @@ class NotificationsFragment : Fragment(), NotificationCallback {
                 // denial here is expected rather than a real error worth showing.
                 if (!AuthManager.getInstance().isLoggedIn()) return@listenToNotifications
 
-                binding?.notificationsPRGLoading?.visibility = View.GONE
-                showMessage(R.string.notif_error)
+                showError()
             }
         )
     }
@@ -101,7 +108,9 @@ class NotificationsFragment : Fragment(), NotificationCallback {
     private fun bindMarkAllButton(notifications: List<AppNotification>) {
         val binding = this.binding ?: return
         val hasUnread = notifications.any { !it.read }
-        binding.notificationsBTNMarkAll.visibility = if (hasUnread) View.VISIBLE else View.GONE
+        // INVISIBLE, not GONE: the header keeps its height so the list below never jumps.
+        binding.notificationsBTNMarkAll.visibility =
+            if (hasUnread) View.VISIBLE else View.INVISIBLE
     }
 
     private fun markAllRead() {
@@ -140,11 +149,23 @@ class NotificationsFragment : Fragment(), NotificationCallback {
         }
     }
 
-    private fun showMessage(messageId: Int) {
+    private fun showEmpty() {
         val binding = this.binding ?: return
         binding.notificationsRVItems.visibility = View.GONE
-        binding.notificationsLBLMessage.visibility = View.VISIBLE
-        binding.notificationsLBLMessage.setText(messageId)
+        binding.notificationsLAYState.showEmpty(
+            icon = R.drawable.ic_nav_notifications,
+            title = R.string.notif_empty_title,
+            body = R.string.notif_empty
+        )
+    }
+
+    private fun showError() {
+        val binding = this.binding ?: return
+        binding.notificationsRVItems.visibility = View.GONE
+        binding.notificationsLAYState.showError(
+            body = R.string.notif_error,
+            onRetry = { listenToNotifications() }
+        )
     }
 
     override fun onDestroyView() {

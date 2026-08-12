@@ -27,6 +27,9 @@ import com.ori.pivotboard_project.utilities.DatabaseManager
 import com.ori.pivotboard_project.utilities.ImageLoader
 import com.ori.pivotboard_project.utilities.SignalManager
 import com.ori.pivotboard_project.utilities.StorageManager
+import com.ori.pivotboard_project.utilities.hide
+import com.ori.pivotboard_project.utilities.showError
+import com.ori.pivotboard_project.utilities.showLoading
 
 /**
  * Section 5.5 - a user profile with counts, follow state and that user's posts.
@@ -127,7 +130,7 @@ class ProfileFragment : Fragment() {
             showError()
             return
         }
-        if (profileUser == null) binding.profilePRGLoading.visibility = View.VISIBLE
+        if (profileUser == null) binding.profileLAYState.showLoading()
 
         DatabaseManager.getInstance().loadUser(uid) { user, _ ->
             if (this.binding == null) return@loadUser
@@ -377,16 +380,17 @@ class ProfileFragment : Fragment() {
 
     private fun showContent() {
         val binding = this.binding ?: return
-        binding.profilePRGLoading.visibility = View.GONE
+        binding.profileLAYState.hide()
         binding.profileLAYContent.visibility = View.VISIBLE
-        binding.profileLBLError.visibility = View.GONE
     }
 
     private fun showError() {
         val binding = this.binding ?: return
-        binding.profilePRGLoading.visibility = View.GONE
         binding.profileLAYContent.visibility = View.GONE
-        binding.profileLBLError.visibility = View.VISIBLE
+        binding.profileLAYState.showError(
+            body = R.string.profile_error_load,
+            onRetry = { loadProfile() }
+        )
     }
 
     override fun onDestroyView() {

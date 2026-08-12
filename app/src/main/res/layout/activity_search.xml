@@ -71,27 +71,13 @@
             android:text="@string/search_filter_tag" />
     </com.google.android.material.chip.ChipGroup>
 
-    <com.google.android.material.progressindicator.CircularProgressIndicator
-        android:id="@+id/search_PRG_loading"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:indeterminate="true"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/search_LAY_filters" />
-
-    <TextView
-        android:id="@+id/search_LBL_message"
+    <!-- Centred in the space below the filters rather than pinned at a fixed offset. -->
+    <include
+        android:id="@+id/search_LAY_state"
+        layout="@layout/view_state"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="48dp"
-        android:gravity="center"
-        android:paddingHorizontal="@dimen/empty_state_padding"
-        android:text="@string/search_idle"
-        android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
-        android:textColor="?attr/colorOnSurfaceVariant"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/search_LAY_filters" />

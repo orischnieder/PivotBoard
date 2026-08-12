@@ -6,26 +6,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.google.android.material.progressindicator.CircularProgressIndicator
-        android:id="@+id/profile_PRG_loading"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:indeterminate="true"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/profile_LBL_error"
+    <include
+        android:id="@+id/profile_LAY_state"
+        layout="@layout/view_state"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:paddingHorizontal="@dimen/empty_state_padding"
-        android:text="@string/profile_error_load"
-        android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
-        android:textColor="?attr/colorOnSurfaceVariant"
-        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -249,8 +234,10 @@
                 android:id="@+id/profile_LBL_no_posts"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="center"
                 android:paddingHorizontal="@dimen/gutter"
-                android:paddingTop="@dimen/space_m"
+                android:paddingTop="@dimen/gutter"
+                android:paddingBottom="@dimen/space_s"
                 android:textAppearance="@style/TextAppearance.PivotBoard.StateBody"
                 android:visibility="gone"
                 tools:text="No posts yet." />

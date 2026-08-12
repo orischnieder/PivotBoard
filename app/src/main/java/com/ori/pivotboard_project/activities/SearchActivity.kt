@@ -17,6 +17,10 @@ import com.ori.pivotboard_project.model.Post
 import com.ori.pivotboard_project.utilities.applySystemBarPadding
 import com.ori.pivotboard_project.utilities.AuthManager
 import com.ori.pivotboard_project.utilities.DatabaseManager
+import com.ori.pivotboard_project.utilities.hide
+import com.ori.pivotboard_project.utilities.showEmpty
+import com.ori.pivotboard_project.utilities.showError
+import com.ori.pivotboard_project.utilities.showLoading
 
 /**
  * Search setups by ticker or tag.
@@ -99,24 +103,20 @@ class SearchActivity : AppCompatActivity() {
     private fun runSearch() {
         val query = binding.searchEDTQuery.text?.toString()?.trim().orEmpty()
         if (query.isEmpty()) {
-            showMessage(getString(R.string.search_idle))
+            showIdle()
             return
         }
 
         lastQuery = query
         hideKeyboard()
-        binding.searchPRGLoading.visibility = View.VISIBLE
-        binding.searchLBLMessage.visibility = View.GONE
         binding.searchRVResults.visibility = View.GONE
+        binding.searchLAYState.showLoading()
 
         val onResult: (List<Post>?, Exception?) -> Unit = { posts, _ ->
             if (!isFinishing && !isDestroyed) {
-                binding.searchPRGLoading.visibility = View.GONE
                 when {
-                    posts == null -> showMessage(getString(R.string.search_error))
-                    posts.isEmpty() ->
-                        showMessage(getString(R.string.search_no_results, query))
-
+                    posts == null -> showError()
+                    posts.isEmpty() -> showNoResults(query)
                     else -> attachLikeStates(posts)
                 }
             }
@@ -134,14 +134,35 @@ class SearchActivity : AppCompatActivity() {
             if (isFinishing || isDestroyed) return@fetchLikedPostIds
             postAdapter.setData(posts, likedIds)
             binding.searchRVResults.visibility = View.VISIBLE
-            binding.searchLBLMessage.visibility = View.GONE
+            binding.searchLAYState.hide()
         }
     }
 
-    private fun showMessage(message: String) {
+    /** Before anything has been typed: a prompt, not a failure. */
+    private fun showIdle() {
         binding.searchRVResults.visibility = View.GONE
-        binding.searchLBLMessage.visibility = View.VISIBLE
-        binding.searchLBLMessage.text = message
+        binding.searchLAYState.showEmpty(
+            icon = R.drawable.ic_search,
+            title = R.string.search_idle_title,
+            body = R.string.search_idle
+        )
+    }
+
+    private fun showNoResults(query: String) {
+        binding.searchRVResults.visibility = View.GONE
+        binding.searchLAYState.showEmpty(
+            icon = R.drawable.ic_search,
+            title = getText(R.string.search_no_results_title),
+            body = getString(R.string.search_no_results, query)
+        )
+    }
+
+    private fun showError() {
+        binding.searchRVResults.visibility = View.GONE
+        binding.searchLAYState.showError(
+            body = R.string.search_error,
+            onRetry = { runSearch() }
+        )
     }
 
     private fun hideKeyboard() {

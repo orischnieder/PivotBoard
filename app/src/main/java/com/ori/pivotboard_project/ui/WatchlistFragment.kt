@@ -16,6 +16,10 @@ import com.ori.pivotboard_project.utilities.AuthManager
 import com.ori.pivotboard_project.utilities.Constants
 import com.ori.pivotboard_project.utilities.DatabaseManager
 import com.ori.pivotboard_project.utilities.SignalManager
+import com.ori.pivotboard_project.utilities.hide
+import com.ori.pivotboard_project.utilities.showEmpty
+import com.ori.pivotboard_project.utilities.showError
+import com.ori.pivotboard_project.utilities.showLoading
 
 /**
  * Section 5.6 - the watchlist.
@@ -57,7 +61,6 @@ class WatchlistFragment : Fragment(), WatchCallback {
         binding.watchlistLAYAdd.visibility = if (isOwnWatchlist) View.VISIBLE else View.GONE
 
         binding.watchlistBTNAdd.setOnClickListener { addTicker() }
-        binding.watchlistBTNRetry.setOnClickListener { loadWatchlist(isRefresh = false) }
         binding.watchlistLAYSwipe.setOnRefreshListener { loadWatchlist(isRefresh = true) }
 
         loadWatchlist(isRefresh = false)
@@ -67,7 +70,7 @@ class WatchlistFragment : Fragment(), WatchCallback {
 
     private fun loadWatchlist(isRefresh: Boolean) {
         val binding = this.binding ?: return
-        if (!isRefresh) setState(loading = true)
+        if (!isRefresh) showLoading()
 
         DatabaseManager.getInstance().loadWatchlist(
             uid = targetUid,
@@ -77,11 +80,11 @@ class WatchlistFragment : Fragment(), WatchCallback {
             binding.watchlistLAYSwipe.isRefreshing = false
 
             when {
-                items == null -> setState(error = true)
+                items == null -> showError()
                 items.isEmpty() -> showEmpty()
                 else -> {
                     watchlistAdapter.setData(items, isOwnWatchlist)
-                    setState(content = true)
+                    showContent()
                 }
             }
         }
@@ -158,25 +161,37 @@ class WatchlistFragment : Fragment(), WatchCallback {
 
     // -------------------------------------------------------------- States
 
+    private fun showLoading() {
+        val binding = this.binding ?: return
+        binding.watchlistLAYSwipe.visibility = View.GONE
+        binding.watchlistLAYState.showLoading()
+    }
+
+    private fun showContent() {
+        val binding = this.binding ?: return
+        binding.watchlistLAYSwipe.visibility = View.VISIBLE
+        binding.watchlistLAYState.hide()
+    }
+
     private fun showEmpty() {
         val binding = this.binding ?: return
-        setState(empty = true)
-        binding.watchlistLBLEmpty.setText(
-            if (isOwnWatchlist) R.string.watchlist_empty_own else R.string.watchlist_empty_other
+        binding.watchlistLAYSwipe.visibility = View.GONE
+        binding.watchlistLAYState.showEmpty(
+            icon = R.drawable.ic_nav_watchlist,
+            title = if (isOwnWatchlist) R.string.watchlist_empty_own_title
+            else R.string.watchlist_empty_other_title,
+            body = if (isOwnWatchlist) R.string.watchlist_empty_own
+            else R.string.watchlist_empty_other
         )
     }
 
-    private fun setState(
-        loading: Boolean = false,
-        content: Boolean = false,
-        empty: Boolean = false,
-        error: Boolean = false
-    ) {
+    private fun showError() {
         val binding = this.binding ?: return
-        binding.watchlistPRGLoading.visibility = if (loading) View.VISIBLE else View.GONE
-        binding.watchlistLAYSwipe.visibility = if (content) View.VISIBLE else View.GONE
-        binding.watchlistLAYEmpty.visibility = if (empty) View.VISIBLE else View.GONE
-        binding.watchlistLAYError.visibility = if (error) View.VISIBLE else View.GONE
+        binding.watchlistLAYSwipe.visibility = View.GONE
+        binding.watchlistLAYState.showError(
+            body = R.string.watchlist_error_load,
+            onRetry = { loadWatchlist(isRefresh = false) }
+        )
     }
 
     override fun onDestroyView() {

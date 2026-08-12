@@ -23,88 +23,15 @@
             android:paddingBottom="@dimen/list_padding_bottom" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-    <!-- Loading: only shown for the initial load; refreshes use the swipe spinner. -->
-    <com.google.android.material.progressindicator.CircularProgressIndicator
-        android:id="@+id/postlist_PRG_loading"
-        android:layout_width="wrap_content"
+    <!-- Loading, empty and error all render here. Refreshes use the swipe spinner instead. -->
+    <include
+        android:id="@+id/postlist_LAY_state"
+        layout="@layout/view_state"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:indeterminate="true"
-        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <!-- Empty state -->
-    <LinearLayout
-        android:id="@+id/postlist_LAY_empty"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:paddingHorizontal="@dimen/empty_state_padding"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <ImageView
-            android:id="@+id/postlist_IMG_empty"
-            android:layout_width="@dimen/empty_state_icon"
-            android:layout_height="@dimen/empty_state_icon"
-            android:alpha="0.4"
-            android:contentDescription="@null"
-            android:src="@drawable/ic_empty_feed"
-            app:tint="?attr/colorOnSurfaceVariant" />
-
-        <TextView
-            android:id="@+id/postlist_LBL_empty_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/gutter"
-            android:gravity="center"
-            android:textAppearance="@style/TextAppearance.PivotBoard.StateTitle" />
-
-        <TextView
-            android:id="@+id/postlist_LBL_empty_body"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/space_s"
-            android:gravity="center"
-            android:textAppearance="@style/TextAppearance.PivotBoard.StateBody" />
-    </LinearLayout>
-
-    <!-- Error state -->
-    <LinearLayout
-        android:id="@+id/postlist_LAY_error"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:paddingHorizontal="@dimen/empty_state_padding"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <TextView
-            android:id="@+id/postlist_LBL_error"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="@string/error_feed_load"
-            android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
-            android:textColor="?attr/colorOnSurfaceVariant" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/postlist_BTN_retry"
-            style="@style/Widget.PivotBoard.Button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/gutter"
-            android:text="@string/action_retry" />
-    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

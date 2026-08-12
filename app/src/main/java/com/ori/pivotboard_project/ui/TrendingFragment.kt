@@ -13,6 +13,10 @@ import com.ori.pivotboard_project.databinding.FragmentTrendingBinding
 import com.ori.pivotboard_project.interfaces.TrendingCallback
 import com.ori.pivotboard_project.model.TrendingTicker
 import com.ori.pivotboard_project.utilities.DatabaseManager
+import com.ori.pivotboard_project.utilities.hide
+import com.ori.pivotboard_project.utilities.showEmpty
+import com.ori.pivotboard_project.utilities.showError
+import com.ori.pivotboard_project.utilities.showLoading
 
 /**
  * Section 7 bonus - the most-posted tickers of the last week, ranked.
@@ -42,7 +46,6 @@ class TrendingFragment : Fragment(), TrendingCallback {
         binding.trendingRVTickers.adapter = trendingAdapter
 
         binding.trendingLAYSwipe.setOnRefreshListener { load(isRefresh = true) }
-        binding.trendingBTNRetry.setOnClickListener { load(isRefresh = false) }
 
         load(isRefresh = false)
     }
@@ -55,18 +58,18 @@ class TrendingFragment : Fragment(), TrendingCallback {
 
     private fun load(isRefresh: Boolean) {
         val binding = this.binding ?: return
-        if (!isRefresh) setState(loading = true)
+        if (!isRefresh) showLoading()
 
         DatabaseManager.getInstance().loadTrendingTickers { tickers, _ ->
             if (this.binding == null) return@loadTrendingTickers
             binding.trendingLAYSwipe.isRefreshing = false
 
             when {
-                tickers == null -> showMessage(R.string.trending_error, showRetry = true)
-                tickers.isEmpty() -> showMessage(R.string.trending_empty, showRetry = false)
+                tickers == null -> showError()
+                tickers.isEmpty() -> showEmpty()
                 else -> {
                     trendingAdapter.setData(tickers)
-                    setState(content = true)
+                    showContent()
                 }
             }
         }
@@ -78,22 +81,35 @@ class TrendingFragment : Fragment(), TrendingCallback {
 
     // -------------------------------------------------------------- States
 
-    private fun showMessage(messageId: Int, showRetry: Boolean) {
+    private fun showLoading() {
         val binding = this.binding ?: return
-        setState(message = true)
-        binding.trendingLBLMessage.setText(messageId)
-        binding.trendingBTNRetry.visibility = if (showRetry) View.VISIBLE else View.GONE
+        binding.trendingLAYSwipe.visibility = View.GONE
+        binding.trendingLAYState.showLoading()
     }
 
-    private fun setState(
-        loading: Boolean = false,
-        content: Boolean = false,
-        message: Boolean = false
-    ) {
+    private fun showContent() {
         val binding = this.binding ?: return
-        binding.trendingPRGLoading.visibility = if (loading) View.VISIBLE else View.GONE
-        binding.trendingLAYSwipe.visibility = if (content) View.VISIBLE else View.GONE
-        binding.trendingLAYMessage.visibility = if (message) View.VISIBLE else View.GONE
+        binding.trendingLAYSwipe.visibility = View.VISIBLE
+        binding.trendingLAYState.hide()
+    }
+
+    private fun showEmpty() {
+        val binding = this.binding ?: return
+        binding.trendingLAYSwipe.visibility = View.GONE
+        binding.trendingLAYState.showEmpty(
+            icon = R.drawable.ic_empty_feed,
+            title = R.string.trending_empty_title,
+            body = R.string.trending_empty
+        )
+    }
+
+    private fun showError() {
+        val binding = this.binding ?: return
+        binding.trendingLAYSwipe.visibility = View.GONE
+        binding.trendingLAYState.showError(
+            body = R.string.trending_error,
+            onRetry = { load(isRefresh = false) }
+        )
     }
 
     override fun onDestroyView() {

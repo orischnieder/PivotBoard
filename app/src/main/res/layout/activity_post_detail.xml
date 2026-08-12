@@ -20,30 +20,15 @@
         app:title="@string/detail_title"
         app:titleTextColor="?attr/colorOnSurface" />
 
-    <com.google.android.material.progressindicator.CircularProgressIndicator
-        android:id="@+id/detail_PRG_loading"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:indeterminate="true"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/detail_LBL_error"
+    <include
+        android:id="@+id/detail_LAY_state"
+        layout="@layout/view_state"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:paddingHorizontal="@dimen/empty_state_padding"
-        android:text="@string/detail_error_load"
-        android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
-        android:textColor="?attr/colorOnSurfaceVariant"
-        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/detail_TB_toolbar" />
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/detail_LAY_content"
@@ -199,8 +184,10 @@
                 android:id="@+id/detail_LBL_no_comments"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="center"
                 android:paddingHorizontal="@dimen/gutter"
-                android:paddingTop="@dimen/space_m"
+                android:paddingTop="@dimen/gutter"
+                android:paddingBottom="@dimen/space_s"
                 android:text="@string/detail_no_comments"
                 android:textAppearance="@style/TextAppearance.PivotBoard.StateBody"
                 android:visibility="gone" />
