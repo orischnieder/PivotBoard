@@ -246,7 +246,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginTop="16dp"
-                android:background="?attr/colorSurfaceVariant" />
+                android:background="?attr/colorOutlineVariant" />
 
             <TextView
                 android:id="@+id/profile_LBL_posts_header"

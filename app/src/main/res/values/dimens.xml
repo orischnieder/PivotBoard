@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Single source of truth for the app's spacing and sizing scale. Screens should reference
+  these rather than repeating literals, so a spacing change is one edit instead of twenty.
+-->
+<resources>
+
+    <!-- Spacing scale -->
+    <dimen name="space_xs">4dp</dimen>
+    <dimen name="space_s">8dp</dimen>
+    <dimen name="space_m">12dp</dimen>
+    <dimen name="space_l">16dp</dimen>
+    <dimen name="space_xl">24dp</dimen>
+    <dimen name="space_xxl">32dp</dimen>
+
+    <!-- Screen gutters. Every screen's content aligns to gutter; login gets the wide one. -->
+    <dimen name="gutter">16dp</dimen>
+    <dimen name="gutter_wide">24dp</dimen>
+
+    <!--
+      Cards: outer margin + inner padding are chosen so card content lands on the same
+      16dp optical gutter as non-card screens (12 + 4 = 16 to the card edge's content box).
+    -->
+    <dimen name="card_margin_horizontal">12dp</dimen>
+    <dimen name="card_margin_vertical">6dp</dimen>
+    <dimen name="card_padding">16dp</dimen>
+    <dimen name="card_radius">16dp</dimen>
+    <dimen name="card_elevation">1dp</dimen>
+
+    <!-- Buttons -->
+    <dimen name="button_radius">16dp</dimen>
+    <dimen name="button_min_height">48dp</dimen>
+    <dimen name="button_min_height_large">56dp</dimen>
+
+    <!-- Avatars -->
+    <dimen name="avatar_small">40dp</dimen>
+    <dimen name="avatar_medium">48dp</dimen>
+    <dimen name="avatar_large">80dp</dimen>
+
+    <!-- Chips: a shared min height keeps the ticker and setup chips the same size when
+         they sit side by side, despite their different text sizes. -->
+    <dimen name="chip_min_height">30dp</dimen>
+    <dimen name="chip_padding_horizontal">10dp</dimen>
+    <dimen name="chip_radius">8dp</dimen>
+
+    <!-- Lists -->
+    <dimen name="list_item_min_height">64dp</dimen>
+    <dimen name="list_padding_vertical">6dp</dimen>
+    <dimen name="list_padding_bottom">12dp</dimen>
+
+    <!-- Icons -->
+    <dimen name="icon_size">24dp</dimen>
+    <dimen name="icon_container_size">40dp</dimen>
+    <dimen name="touch_target_min">48dp</dimen>
+
+    <!-- Images -->
+    <dimen name="chart_height_feed">200dp</dimen>
+    <dimen name="chart_height_detail">240dp</dimen>
+
+    <!-- States -->
+    <dimen name="empty_state_icon">72dp</dimen>
+    <dimen name="empty_state_padding">32dp</dimen>
+
+    <dimen name="divider_height">1dp</dimen>
+
+</resources>

@@ -17,30 +17,45 @@ watchlist, and discover trending tickers.
 
 ### Implemented
 
-- **Splash** — animated launcher screen that routes to Login or the app shell based on the
-  current Firebase session.
+- **Splash** — launcher screen that routes to Login or the app shell based on the current
+  Firebase session.
 - **Authentication** — FirebaseUI drop-in sign-in with **Email/Password** and **Google**.
   The profile document `users/{uid}` is created on first sign-in, and self-heals on later
   launches if it ever goes missing.
-- **Feed** — **Following** and **Discover** tabs (TabLayout + ViewPager2), post cards with
-  author, ticker, setup type, chart image, truncated notes and relative timestamps.
-  Pull-to-refresh, optimistic likes, and explicit loading / empty / error states.
+- **Feed** — **Following**, **Discover** and **Trending** tabs (TabLayout + ViewPager2).
+  Post cards show author, ticker, setup type, chart image, truncated notes and relative
+  timestamps. Pull-to-refresh, optimistic likes, and explicit loading / empty / error states
+  on every list.
 - **Create post** — ticker (forced uppercase, validated), setup-type spinner, chart image via
   the Android Photo Picker, notes and optional tags. Shows upload progress and locks the
   form while publishing.
+- **Post detail** — the full post with untruncated notes and tags, likes, and **realtime
+  comments** via a Firestore snapshot listener. Liking or commenting notifies the author.
+- **Delete own post** — from the card overflow or the detail toolbar, with confirmation.
+  Removes the post, its comments and likes, its chart image in Storage, and decrements the
+  author's post count, in one transaction.
+- **Profile** — avatar, display name, bio, post/follower/following counts, and that user's
+  posts. **Follow / unfollow**, **profile editing**, and **profile picture upload**; changing
+  a name or picture backfills the copies denormalized onto existing posts.
+- **Followers / Following lists** — tap either count to browse those users and open them.
+- **Watchlist** — add and remove tickers, toggle each **public or private**, and view another
+  trader's public tickers from their profile.
+- **Ticker view** — tapping any ticker chip or watchlist row lists every setup for it.
+- **Search** — by **ticker** (prefix match) or **tag** (exact match).
+- **Notifications** — realtime list of likes, comments and new followers, with an unread
+  badge on the bottom navigation, mark-as-read on tap, and mark-all-as-read.
+- **Trending tickers** *(bonus, §7)* — the most-posted tickers of the last 7 days, ranked by
+  post count with distinct-trader counts.
 - **Log out** — with confirmation, from the toolbar overflow menu.
-- **Dark mode** — full `values-night` theme.
+- **Dark mode** — full `values-night` theme, including night variants of the image
+  placeholders. Edge-to-edge layout with explicit window-inset and keyboard handling.
 
-### Not yet implemented
+### Not implemented
 
-- Post detail with comments (§5.4)
-- Profile with follow/unfollow (§5.5)
-- Watchlist (§5.6)
-- Search and the notifications screen
-- Bonus: trending tickers, advanced search, FCM push, statistics, onboarding
-
-Notification documents *are* already written when a post is liked, so the notifications
-screen has data to read once it is built.
+- **People / user search** — see Known gaps below.
+- FCM push notifications (in-app notifications are implemented; push is not).
+- Statistics screen, onboarding carousel, editing a post after publishing, sharing a post.
+- Lottie splash animation — the splash shows the app icon; see Known gaps.
 
 ---
 
@@ -48,9 +63,17 @@ screen has data to read once it is built.
 
 _To be added._
 
-| Splash | Login | Feed | Create post |
+| Login | Feed — Discover | Feed — Trending | Post detail |
 |---|---|---|---|
 | _(screenshot)_ | _(screenshot)_ | _(screenshot)_ | _(screenshot)_ |
+
+| Create post | Profile | Watchlist | Notifications |
+|---|---|---|---|
+| _(screenshot)_ | _(screenshot)_ | _(screenshot)_ | _(screenshot)_ |
+
+| Search | Followers | Dark mode |
+|---|---|---|
+| _(screenshot)_ | _(screenshot)_ | _(screenshot)_ |
 
 ---
 
@@ -194,9 +217,11 @@ Denormalized counters are kept in step with batched writes and `FieldValue.incre
 
 ## Known gaps
 
-- **No Lottie animation asset.** The splash screen shows the static logo; drop a JSON at
-  `res/raw/splash_animation.json` and enable `splash_LOTTIE_animation` to use one.
-- **The app logo is a placeholder** vector, not final artwork.
+- **No Lottie animation asset.** The splash screen shows the app icon; drop a JSON at
+  `res/raw/splash_animation.json` and enable `splash_LOTTIE_animation` to use one. The
+  Lottie dependency and the view are already wired up.
+- **Trending uses a rolling 7-day window** (§7's "this week"), so it empties out if no one
+  has posted in a week.
 - **User search is not implemented.** Search covers posts by ticker (prefix match) and by
   tag (exact match), but there is no "People" tab for finding traders by name or username.
   Users are reachable by tapping an author anywhere in the app, or through the followers /

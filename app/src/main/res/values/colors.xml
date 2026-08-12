@@ -3,51 +3,89 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
+    <!--
+      Brand constants, sampled from the launcher icon (ic_launcher.png):
+      navy plate, teal-green "up" bars, red "down" bars. Every scheme colour below is
+      derived from these three hues so the app and its icon read as one thing.
+    -->
+    <color name="brand_navy">#10243B</color>
+    <color name="brand_green">#00C896</color>
+    <color name="brand_red">#E5484D</color>
+
     <!-- Light scheme -->
-    <color name="primary_light">#1F6FEB</color>
+    <color name="primary_light">#1E4976</color>
     <color name="on_primary_light">#FFFFFF</color>
-    <color name="primary_container_light">#D7E6FF</color>
-    <color name="on_primary_container_light">#00265C</color>
+    <color name="primary_container_light">#D6E4F7</color>
+    <color name="on_primary_container_light">#0A2440</color>
 
-    <color name="secondary_light">#00875A</color>
+    <color name="secondary_light">#007A5C</color>
     <color name="on_secondary_light">#FFFFFF</color>
-    <color name="secondary_container_light">#C7F2DF</color>
-    <color name="on_secondary_container_light">#00281A</color>
+    <color name="secondary_container_light">#B9F2DF</color>
+    <color name="on_secondary_container_light">#00251A</color>
 
-    <color name="background_light">#FBFCFE</color>
-    <color name="on_background_light">#12151A</color>
+    <color name="background_light">#F7F9FC</color>
+    <color name="on_background_light">#0F1A26</color>
     <color name="surface_light">#FFFFFF</color>
-    <color name="on_surface_light">#12151A</color>
-    <color name="surface_variant_light">#E3E7EE</color>
-    <color name="on_surface_variant_light">#454B54</color>
-    <color name="outline_light">#767C86</color>
+    <color name="on_surface_light">#0F1A26</color>
+    <color name="surface_variant_light">#E1E8F0</color>
+    <color name="on_surface_variant_light">#46505C</color>
 
-    <color name="error_light">#B3261E</color>
+    <!-- Card / sheet fills. Distinct from surface_variant, which is now dividers only. -->
+    <color name="surface_container_low_light">#F4F7FB</color>
+    <color name="surface_container_light">#EEF2F7</color>
+    <color name="surface_container_high_light">#E7EDF4</color>
+    <color name="surface_container_highest_light">#E1E8F0</color>
+
+    <color name="outline_light">#6F7A87</color>
+    <color name="outline_variant_light">#D3DAE3</color>
+
+    <color name="error_light">#C0342F</color>
     <color name="on_error_light">#FFFFFF</color>
+    <color name="error_container_light">#FFDAD6</color>
+    <color name="on_error_container_light">#410004</color>
 
-    <!-- Dark scheme -->
-    <color name="primary_dark">#A8C7FF</color>
-    <color name="on_primary_dark">#00325C</color>
-    <color name="primary_container_dark">#00497F</color>
-    <color name="on_primary_container_dark">#D7E6FF</color>
+    <!-- Dark scheme: surfaces sit in the icon's navy family rather than neutral grey. -->
+    <color name="primary_dark">#A7C8EC</color>
+    <color name="on_primary_dark">#0A2440</color>
+    <color name="primary_container_dark">#1E4976</color>
+    <color name="on_primary_container_dark">#D6E4F7</color>
 
-    <color name="secondary_dark">#7ED9B2</color>
-    <color name="on_secondary_dark">#003823</color>
-    <color name="secondary_container_dark">#005236</color>
-    <color name="on_secondary_container_dark">#C7F2DF</color>
+    <color name="secondary_dark">#00C896</color>
+    <color name="on_secondary_dark">#003527</color>
+    <color name="secondary_container_dark">#005B44</color>
+    <color name="on_secondary_container_dark">#B9F2DF</color>
 
-    <color name="background_dark">#11141A</color>
-    <color name="on_background_dark">#E3E6EB</color>
-    <color name="surface_dark">#191C22</color>
-    <color name="on_surface_dark">#E3E6EB</color>
-    <color name="surface_variant_dark">#414751</color>
-    <color name="on_surface_variant_dark">#C2C7D0</color>
-    <color name="outline_dark">#8C919B</color>
+    <color name="background_dark">#0B1622</color>
+    <color name="on_background_dark">#E2E8F0</color>
+    <color name="surface_dark">#101E2E</color>
+    <color name="on_surface_dark">#E2E8F0</color>
+    <color name="surface_variant_dark">#2C3E52</color>
+    <color name="on_surface_variant_dark">#B6C2D1</color>
 
-    <color name="error_dark">#FFB4AB</color>
-    <color name="on_error_dark">#690005</color>
+    <color name="surface_container_low_dark">#0E1A28</color>
+    <color name="surface_container_dark">#16283B</color>
+    <color name="surface_container_high_dark">#1C3145</color>
+    <color name="surface_container_highest_dark">#23394F</color>
 
-    <!-- Semantic, theme-independent -->
-    <color name="gain_green">#00875A</color>
-    <color name="loss_red">#D1453B</color>
+    <color name="outline_dark">#7C8A9C</color>
+    <color name="outline_variant_dark">#2C3E52</color>
+
+    <color name="error_dark">#FFB3B0</color>
+    <color name="on_error_dark">#5C0E10</color>
+    <color name="error_container_dark">#8C1D1A</color>
+    <color name="on_error_container_dark">#FFDAD6</color>
+
+    <!--
+      Semantic trading colours. Overridden in values-night: the brand green/red are tuned
+      for a dark plate, so on a light surface they need the darker variants below to stay
+      readable as text or icon tints.
+    -->
+    <color name="gain_green">#007A5C</color>
+    <color name="loss_red">#C0342F</color>
+
+    <!--
+      Literal neutrals for drawables that Glide may inflate with the application context,
+      where ?attr/ theme references are not resolvable.
+    -->
+    <color name="avatar_backdrop">#E3E9F2</color>
 </resources>

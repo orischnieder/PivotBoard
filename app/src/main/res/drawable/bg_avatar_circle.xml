@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Circular backdrop; paired with android:clipToOutline so avatars render round. -->
+<!--
+  Circular backdrop; paired with android:clipToOutline so avatars render round.
+
+  Uses @color/avatar_backdrop rather than ?attr/colorSurfaceContainer: Glide may inflate
+  this with the application context, where theme attributes are not resolvable. A plain
+  colour resource still honours -night, so values-night/colors.xml supplies the dark tone.
+-->
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="oval">
-    <solid android:color="#E3E7EE" />
+    <solid android:color="@color/avatar_backdrop" />
 </shape>

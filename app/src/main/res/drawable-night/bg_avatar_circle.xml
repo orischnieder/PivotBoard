@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Dark-mode counterpart. Literal colors, matching the light variant: this is used as an
-     avatar backdrop behind Glide images, where theme attributes are not always resolvable. -->
-<shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:shape="oval">
-    <solid android:color="#414751" />
-</shape>

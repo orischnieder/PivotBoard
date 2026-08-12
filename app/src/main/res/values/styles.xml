@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Shared widget styles and text appearances.
+
+  Screens should apply these instead of repeating textAppearance / cornerRadius / padding
+  inline. Everything here resolves colours through ?attr/, so there is no values-night
+  counterpart: the theme supplies the right tone in each mode.
+-->
+<resources>
+
+    <!-- ============================================================ Text appearances -->
+
+    <!-- Ticker symbols. Bold and slightly tracked out so they read as a symbol, not a word. -->
+    <style name="TextAppearance.PivotBoard.Ticker" parent="TextAppearance.Material3.TitleMedium">
+        <item name="android:textStyle">bold</item>
+        <item name="android:letterSpacing">0.05</item>
+    </style>
+
+    <style name="TextAppearance.PivotBoard.Disclaimer" parent="TextAppearance.Material3.BodySmall">
+        <item name="android:textColor">?attr/colorOnSurfaceVariant</item>
+        <item name="android:lineSpacingMultiplier">1.2</item>
+    </style>
+
+    <!-- "Comments", "Posts", "Trending this week" — the one style for in-page section titles. -->
+    <style name="TextAppearance.PivotBoard.SectionHeader" parent="TextAppearance.Material3.TitleSmall">
+        <item name="android:textColor">?attr/colorOnSurface</item>
+    </style>
+
+    <!-- Timestamps, counts, "added 3d ago" — supporting metadata. -->
+    <style name="TextAppearance.PivotBoard.Caption" parent="TextAppearance.Material3.BodySmall">
+        <item name="android:textColor">?attr/colorOnSurfaceVariant</item>
+    </style>
+
+    <!-- Display names, list item primary lines. -->
+    <style name="TextAppearance.PivotBoard.ItemTitle" parent="TextAppearance.Material3.TitleSmall">
+        <item name="android:textColor">?attr/colorOnSurface</item>
+    </style>
+
+    <!-- Empty / error / idle states. Used together as a title + body pair. -->
+    <style name="TextAppearance.PivotBoard.StateTitle" parent="TextAppearance.Material3.TitleMedium">
+        <item name="android:textColor">?attr/colorOnSurface</item>
+    </style>
+
+    <style name="TextAppearance.PivotBoard.StateBody" parent="TextAppearance.Material3.BodyMedium">
+        <item name="android:textColor">?attr/colorOnSurfaceVariant</item>
+        <item name="android:lineSpacingMultiplier">1.15</item>
+    </style>
+
+    <!-- ======================================================================= Cards -->
+
+    <style name="Widget.PivotBoard.Card" parent="Widget.Material3.CardView.Elevated">
+        <item name="android:layout_marginHorizontal">@dimen/card_margin_horizontal</item>
+        <item name="android:layout_marginVertical">@dimen/card_margin_vertical</item>
+        <item name="cardBackgroundColor">?attr/colorSurface</item>
+        <item name="cardCornerRadius">@dimen/card_radius</item>
+        <item name="cardElevation">@dimen/card_elevation</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:foreground">?attr/selectableItemBackground</item>
+    </style>
+
+    <!-- Non-interactive panels: the login disclaimer, the create-post chart well. -->
+    <style name="Widget.PivotBoard.Card.Panel" parent="Widget.Material3.CardView.Filled">
+        <item name="cardBackgroundColor">?attr/colorSurfaceContainer</item>
+        <item name="cardCornerRadius">@dimen/card_radius</item>
+        <item name="cardElevation">0dp</item>
+    </style>
+
+    <!-- ===================================================================== Buttons -->
+
+    <style name="Widget.PivotBoard.Button" parent="Widget.Material3.Button">
+        <item name="android:minHeight">@dimen/button_min_height</item>
+        <item name="cornerRadius">@dimen/button_radius</item>
+    </style>
+
+    <!-- Primary calls to action: sign in, publish. -->
+    <style name="Widget.PivotBoard.Button.Large">
+        <item name="android:minHeight">@dimen/button_min_height_large</item>
+    </style>
+
+    <style name="Widget.PivotBoard.Button.Outlined" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="android:minHeight">@dimen/button_min_height</item>
+        <item name="cornerRadius">@dimen/button_radius</item>
+    </style>
+
+    <style name="Widget.PivotBoard.Button.Text" parent="Widget.Material3.Button.TextButton">
+        <item name="android:minHeight">@dimen/button_min_height</item>
+    </style>
+
+    <!-- Like / comment counters on a post. -->
+    <style name="Widget.PivotBoard.Button.Action" parent="Widget.Material3.Button.TextButton.Icon">
+        <item name="android:minHeight">@dimen/button_min_height</item>
+        <item name="android:textColor">?attr/colorOnSurfaceVariant</item>
+        <item name="iconTint">?attr/colorOnSurfaceVariant</item>
+    </style>
+
+    <style name="Widget.PivotBoard.Button.Icon" parent="Widget.Material3.Button.IconButton">
+        <item name="android:minWidth">@dimen/touch_target_min</item>
+        <item name="android:minHeight">@dimen/touch_target_min</item>
+        <item name="iconTint">?attr/colorOnSurfaceVariant</item>
+    </style>
+
+    <!-- ======================================================================= Chips -->
+    <!--
+      These are TextView styles, not Material Chip styles: the ticker and setup labels are
+      display-only, so a Chip's touch and check behaviour would be dead weight. The shared
+      min height keeps them the same size next to each other despite different text sizes.
+    -->
+
+    <style name="Widget.PivotBoard.Chip" parent="">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:minHeight">@dimen/chip_min_height</item>
+        <item name="android:gravity">center</item>
+        <item name="android:paddingHorizontal">@dimen/chip_padding_horizontal</item>
+    </style>
+
+    <style name="Widget.PivotBoard.Chip.Ticker">
+        <item name="android:background">@drawable/bg_chip_ticker</item>
+        <item name="android:textAppearance">@style/TextAppearance.PivotBoard.Ticker</item>
+        <item name="android:textColor">?attr/colorOnPrimaryContainer</item>
+    </style>
+
+    <style name="Widget.PivotBoard.Chip.Setup">
+        <item name="android:background">@drawable/bg_chip_setup</item>
+        <item name="android:textAppearance">@style/TextAppearance.Material3.LabelMedium</item>
+        <item name="android:textColor">?attr/colorOnSecondaryContainer</item>
+    </style>
+
+</resources>

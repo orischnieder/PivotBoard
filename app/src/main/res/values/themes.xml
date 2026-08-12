@@ -18,10 +18,24 @@
         <item name="colorOnSurface">@color/on_surface_light</item>
         <item name="colorSurfaceVariant">@color/surface_variant_light</item>
         <item name="colorOnSurfaceVariant">@color/on_surface_variant_light</item>
+
+        <!--
+          Card and sheet fills. Kept separate from colorSurfaceVariant, which is a divider
+          tone: using one token for both made filled cards render lighter than the surface
+          they sit on in dark mode.
+        -->
+        <item name="colorSurfaceContainerLow">@color/surface_container_low_light</item>
+        <item name="colorSurfaceContainer">@color/surface_container_light</item>
+        <item name="colorSurfaceContainerHigh">@color/surface_container_high_light</item>
+        <item name="colorSurfaceContainerHighest">@color/surface_container_highest_light</item>
+
         <item name="colorOutline">@color/outline_light</item>
+        <item name="colorOutlineVariant">@color/outline_variant_light</item>
 
         <item name="colorError">@color/error_light</item>
         <item name="colorOnError">@color/on_error_light</item>
+        <item name="colorErrorContainer">@color/error_container_light</item>
+        <item name="colorOnErrorContainer">@color/on_error_container_light</item>
 
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
@@ -43,16 +57,5 @@
         <item name="android:windowSplashScreenBackground" tools:targetApi="s">
             @color/surface_light
         </item>
-    </style>
-
-    <!-- Shared text appearances so screens don't re-declare sizes. -->
-    <style name="TextAppearance.PivotBoard.Ticker" parent="TextAppearance.Material3.TitleMedium">
-        <item name="android:textStyle">bold</item>
-        <item name="android:letterSpacing">0.05</item>
-    </style>
-
-    <style name="TextAppearance.PivotBoard.Disclaimer" parent="TextAppearance.Material3.BodySmall">
-        <item name="android:textColor">?attr/colorOnSurfaceVariant</item>
-        <item name="android:lineSpacingMultiplier">1.2</item>
     </style>
 </resources>

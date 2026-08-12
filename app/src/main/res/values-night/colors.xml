@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Night overrides for the colours that are used as literals rather than through the theme.
+  Everything else is selected by values-night/themes.xml pointing at the *_dark tokens.
+-->
+<resources>
+    <!-- On a dark plate the raw brand green/red are legible, so use them unmodified. -->
+    <color name="gain_green">#00C896</color>
+    <color name="loss_red">#FF8A87</color>
+
+    <color name="avatar_backdrop">#24374B</color>
+</resources>
