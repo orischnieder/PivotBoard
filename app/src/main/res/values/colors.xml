@@ -101,4 +101,16 @@
     <color name="avatar_backdrop">#E3E9F2</color>
     <color name="placeholder_backdrop">#E3E9F2</color>
     <color name="placeholder_glyph">#8FA3BA</color>
+
+    <!--
+      Shadows FirebaseUI's own colour of the same name, which tints its email-provider button
+      a stock red (#D0021B) that has nothing to do with our palette. An app resource wins over
+      a library resource with the same name, so redeclaring it here is enough - the button
+      itself is inflated by the library and is not ours to style.
+
+      No values-night counterpart on purpose: the library hardcodes the button's label and icon
+      to white, so this has to stay a colour white reads on. Following colorPrimary would flip
+      it to a light blue in dark mode and leave white text on it.
+    -->
+    <color name="fui_bgEmail">#1E4976</color>
 </resources>
