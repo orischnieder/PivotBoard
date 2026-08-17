@@ -8,57 +8,144 @@
 -->
 <resources>
 
+    <!-- ================================================================== Typescale -->
+    <!--
+      The app typeface, applied once per Material 3 type role.
+
+      Every TextAppearance.Material3.* hardcodes `fontFamily` to the M3 reference typeface, so a
+      plain `android:fontFamily` on the theme is ignored by anything carrying a text appearance -
+      which is every Material widget. Overriding the roles here and pointing the theme's
+      textAppearance* attributes at them is what actually reaches buttons, toolbars, tabs, the
+      bottom bar, text fields and dialogs. Nothing but the font changes: sizes, line heights and
+      letter spacing are all inherited.
+
+      Our semantic styles below extend these rather than the Material ones, so there is still one
+      place to change the typeface.
+    -->
+
+    <style name="TextAppearance.PivotBoard.Typescale.HeadlineSmall" parent="TextAppearance.Material3.HeadlineSmall">
+        <item name="fontFamily">@font/manrope</item>
+        <item name="android:fontFamily">@font/manrope</item>
+    </style>
+
+    <style name="TextAppearance.PivotBoard.Typescale.TitleLarge" parent="TextAppearance.Material3.TitleLarge">
+        <item name="fontFamily">@font/manrope</item>
+        <item name="android:fontFamily">@font/manrope</item>
+    </style>
+
+    <style name="TextAppearance.PivotBoard.Typescale.TitleMedium" parent="TextAppearance.Material3.TitleMedium">
+        <item name="fontFamily">@font/manrope</item>
+        <item name="android:fontFamily">@font/manrope</item>
+    </style>
+
+    <style name="TextAppearance.PivotBoard.Typescale.TitleSmall" parent="TextAppearance.Material3.TitleSmall">
+        <item name="fontFamily">@font/manrope</item>
+        <item name="android:fontFamily">@font/manrope</item>
+    </style>
+
+    <style name="TextAppearance.PivotBoard.Typescale.BodyLarge" parent="TextAppearance.Material3.BodyLarge">
+        <item name="fontFamily">@font/manrope</item>
+        <item name="android:fontFamily">@font/manrope</item>
+    </style>
+
+    <style name="TextAppearance.PivotBoard.Typescale.BodyMedium" parent="TextAppearance.Material3.BodyMedium">
+        <item name="fontFamily">@font/manrope</item>
+        <item name="android:fontFamily">@font/manrope</item>
+    </style>
+
+    <style name="TextAppearance.PivotBoard.Typescale.BodySmall" parent="TextAppearance.Material3.BodySmall">
+        <item name="fontFamily">@font/manrope</item>
+        <item name="android:fontFamily">@font/manrope</item>
+    </style>
+
+    <style name="TextAppearance.PivotBoard.Typescale.LabelLarge" parent="TextAppearance.Material3.LabelLarge">
+        <item name="fontFamily">@font/manrope</item>
+        <item name="android:fontFamily">@font/manrope</item>
+    </style>
+
+    <style name="TextAppearance.PivotBoard.Typescale.LabelMedium" parent="TextAppearance.Material3.LabelMedium">
+        <item name="fontFamily">@font/manrope</item>
+        <item name="android:fontFamily">@font/manrope</item>
+    </style>
+
+    <style name="TextAppearance.PivotBoard.Typescale.LabelSmall" parent="TextAppearance.Material3.LabelSmall">
+        <item name="fontFamily">@font/manrope</item>
+        <item name="android:fontFamily">@font/manrope</item>
+    </style>
+
     <!-- ============================================================ Text appearances -->
 
     <!-- Ticker symbols. Bold and slightly tracked out so they read as a symbol, not a word. -->
-    <style name="TextAppearance.PivotBoard.Ticker" parent="TextAppearance.Material3.TitleMedium">
+    <style name="TextAppearance.PivotBoard.Ticker" parent="@style/TextAppearance.PivotBoard.Typescale.TitleMedium">
         <item name="android:textStyle">bold</item>
         <item name="android:letterSpacing">0.05</item>
     </style>
 
-    <style name="TextAppearance.PivotBoard.Disclaimer" parent="TextAppearance.Material3.BodySmall">
+    <style name="TextAppearance.PivotBoard.Disclaimer" parent="@style/TextAppearance.PivotBoard.Typescale.BodySmall">
         <item name="android:textColor">?attr/colorOnSurfaceVariant</item>
         <item name="android:lineSpacingMultiplier">1.2</item>
     </style>
 
     <!-- "Comments", "Posts", "Trending this week" — the one style for in-page section titles. -->
-    <style name="TextAppearance.PivotBoard.SectionHeader" parent="TextAppearance.Material3.TitleSmall">
+    <style name="TextAppearance.PivotBoard.SectionHeader" parent="@style/TextAppearance.PivotBoard.Typescale.TitleSmall">
         <item name="android:textColor">?attr/colorOnSurface</item>
     </style>
 
     <!-- Timestamps, counts, "added 3d ago" — supporting metadata. -->
-    <style name="TextAppearance.PivotBoard.Caption" parent="TextAppearance.Material3.BodySmall">
+    <style name="TextAppearance.PivotBoard.Caption" parent="@style/TextAppearance.PivotBoard.Typescale.BodySmall">
         <item name="android:textColor">?attr/colorOnSurfaceVariant</item>
     </style>
 
     <!-- Display names, list item primary lines. -->
-    <style name="TextAppearance.PivotBoard.ItemTitle" parent="TextAppearance.Material3.TitleSmall">
+    <style name="TextAppearance.PivotBoard.ItemTitle" parent="@style/TextAppearance.PivotBoard.Typescale.TitleSmall">
         <item name="android:textColor">?attr/colorOnSurface</item>
     </style>
 
     <!-- Primary reading text: post notes, comment bodies, notification lines, bios. -->
-    <style name="TextAppearance.PivotBoard.Body" parent="TextAppearance.Material3.BodyMedium">
+    <style name="TextAppearance.PivotBoard.Body" parent="@style/TextAppearance.PivotBoard.Typescale.BodyMedium">
         <item name="android:textColor">?attr/colorOnSurface</item>
     </style>
 
     <!-- Profile counters. A number being reported, not a title. -->
-    <style name="TextAppearance.PivotBoard.MetricValue" parent="TextAppearance.Material3.TitleMedium">
+    <style name="TextAppearance.PivotBoard.MetricValue" parent="@style/TextAppearance.PivotBoard.Typescale.TitleMedium">
         <item name="android:textColor">?attr/colorOnSurface</item>
     </style>
 
     <!-- Trending position. Same size as a metric but deliberately recessive. -->
-    <style name="TextAppearance.PivotBoard.Rank" parent="TextAppearance.Material3.TitleMedium">
+    <style name="TextAppearance.PivotBoard.Rank" parent="@style/TextAppearance.PivotBoard.Typescale.TitleMedium">
         <item name="android:textColor">?attr/colorOnSurfaceVariant</item>
     </style>
 
     <!-- Empty / error / idle states. Used together as a title + body pair. -->
-    <style name="TextAppearance.PivotBoard.StateTitle" parent="TextAppearance.Material3.TitleMedium">
+    <style name="TextAppearance.PivotBoard.StateTitle" parent="@style/TextAppearance.PivotBoard.Typescale.TitleMedium">
         <item name="android:textColor">?attr/colorOnSurface</item>
     </style>
 
-    <style name="TextAppearance.PivotBoard.StateBody" parent="TextAppearance.Material3.BodyMedium">
+    <style name="TextAppearance.PivotBoard.StateBody" parent="@style/TextAppearance.PivotBoard.Typescale.BodyMedium">
         <item name="android:textColor">?attr/colorOnSurfaceVariant</item>
         <item name="android:lineSpacingMultiplier">1.15</item>
+    </style>
+
+    <!--
+      Screen titles in the top bar. Heavier and tracked out a little so the title reads as
+      the app's own voice rather than a stock action-bar label, and sized one step up from
+      the Material default now that it sits centred with empty space either side of it.
+    -->
+    <style name="TextAppearance.PivotBoard.ToolbarTitle" parent="@style/TextAppearance.PivotBoard.Typescale.TitleLarge">
+        <item name="android:textStyle">bold</item>
+        <item name="android:letterSpacing">0.02</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+    </style>
+
+    <!-- ===================================================================== Toolbars -->
+
+    <!-- Every screen's top bar. Applied so the title treatment is defined in exactly one place. -->
+    <style name="Widget.PivotBoard.Toolbar" parent="Widget.Material3.Toolbar">
+        <item name="android:background">@drawable/bg_toolbar</item>
+        <item name="titleCentered">true</item>
+        <item name="subtitleCentered">true</item>
+        <item name="titleTextAppearance">@style/TextAppearance.PivotBoard.ToolbarTitle</item>
+        <item name="titleTextColor">?attr/colorOnSurface</item>
     </style>
 
     <!-- ======================================================================= Cards -->
@@ -83,9 +170,16 @@
 
     <!-- ===================================================================== Buttons -->
 
+    <!--
+      The filled CTA. stateListAnimator is cleared because Material's default one drives
+      elevation from 0, which would cancel the resting lift set here; the ripple still gives
+      the press feedback it was providing.
+    -->
     <style name="Widget.PivotBoard.Button" parent="Widget.Material3.Button">
         <item name="android:minHeight">@dimen/button_min_height</item>
         <item name="cornerRadius">@dimen/button_radius</item>
+        <item name="android:stateListAnimator">@null</item>
+        <item name="android:elevation">@dimen/button_elevation</item>
     </style>
 
     <!-- Primary calls to action: sign in, publish. -->
@@ -138,7 +232,7 @@
 
     <style name="Widget.PivotBoard.Chip.Setup">
         <item name="android:background">@drawable/bg_chip_setup</item>
-        <item name="android:textAppearance">@style/TextAppearance.Material3.LabelMedium</item>
+        <item name="android:textAppearance">@style/TextAppearance.PivotBoard.Typescale.LabelMedium</item>
         <item name="android:textColor">?attr/colorOnSecondaryContainer</item>
     </style>
 

@@ -10,14 +10,13 @@
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/main_TB_toolbar"
+        style="@style/Widget.PivotBoard.Toolbar"
         android:layout_width="0dp"
         android:layout_height="?attr/actionBarSize"
-        android:background="@drawable/bg_toolbar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:title="@string/app_name"
-        app:titleTextColor="?attr/colorOnSurface" />
+        app:title="@string/app_name" />
 
     <FrameLayout
         android:id="@+id/main_FRAME_container"

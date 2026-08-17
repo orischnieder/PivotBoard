@@ -10,15 +10,14 @@
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/profileact_TB_toolbar"
+        style="@style/Widget.PivotBoard.Toolbar"
         android:layout_width="0dp"
         android:layout_height="?attr/actionBarSize"
-        android:background="@drawable/bg_toolbar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:navigationIcon="@drawable/ic_arrow_back"
-        app:title="@string/profile_title"
-        app:titleTextColor="?attr/colorOnSurface" />
+        app:title="@string/profile_title" />
 
     <FrameLayout
         android:id="@+id/profileact_FRAME_container"

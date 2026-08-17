@@ -26,12 +26,25 @@
     <dimen name="card_margin_vertical">6dp</dimen>
     <dimen name="card_padding">16dp</dimen>
     <dimen name="card_radius">16dp</dimen>
-    <dimen name="card_elevation">1dp</dimen>
+
+    <!--
+      Elevation. Enough to cast a readable shadow in light mode without the cards looking like
+      they are hovering; in dark mode Material's surface tint does the same job, since a shadow
+      on a dark background is close to invisible. Panels (the login disclaimer, the create-post
+      chart well) stay at 0 on purpose - they are recesses, not raised surfaces.
+    -->
+    <dimen name="card_elevation">3dp</dimen>
+    <dimen name="button_elevation">2dp</dimen>
 
     <!-- Buttons -->
     <dimen name="button_radius">16dp</dimen>
     <dimen name="button_min_height">48dp</dimen>
     <dimen name="button_min_height_large">56dp</dimen>
+
+    <!-- Login logo badge: the ring is sized around the 96dp mark it encloses. -->
+    <dimen name="logo_badge_size">144dp</dimen>
+    <dimen name="logo_badge_mark">96dp</dimen>
+    <dimen name="logo_badge_stroke">1.5dp</dimen>
 
     <!-- Avatars -->
     <dimen name="avatar_small">40dp</dimen>

@@ -17,7 +17,13 @@ class AuthManager private constructor(context: Context) {
 
     private val contextRef = WeakReference(context)
 
-    /** The FirebaseUI sign-in Intent: Email + Google, branded with the app logo and theme. */
+    /**
+     * The FirebaseUI sign-in Intent: Email + Google, branded with the app logo and theme.
+     *
+     * The provider sheet sizes the logo from the drawable's own intrinsic width - its ImageView is
+     * wrap_content with no adjustViewBounds - so `logo_pivotboard` carries a display-scale
+     * intrinsic size for this screen's benefit. There is no size argument on setLogo().
+     */
     fun buildSignInIntent(): Intent {
         val providers = arrayListOf(
             AuthUI.IdpConfig.EmailBuilder().build(),

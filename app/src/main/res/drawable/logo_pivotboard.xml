@@ -10,10 +10,15 @@
   The dashes are nine explicit segments rather than a stroke dash pattern: VectorDrawable
   has no stroke-dasharray, so a dashed rule has to be drawn as separate lines. They span
   4.46 -> 19.54 divided evenly into nine dashes and eight gaps of 0.887 each.
+
+  Intrinsic size is 112dp, not the 24dp an icon would use, because FirebaseUI's provider-selection
+  sheet draws the logo into a wrap_content ImageView and offers no way to size it: at 24dp it
+  rendered as a speck. Splash and Login both pin explicit sizes, so this affects only that sheet.
+  The viewport stays 24 - only the default draw size changes, and the vector scales cleanly.
 -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="24dp"
-    android:height="24dp"
+    android:width="112dp"
+    android:height="112dp"
     android:viewportWidth="24"
     android:viewportHeight="24">
 

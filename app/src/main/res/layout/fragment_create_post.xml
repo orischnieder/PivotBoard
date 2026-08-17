@@ -63,7 +63,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/gutter"
             android:text="@string/create_label_chart"
-            android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
+            android:textAppearance="@style/TextAppearance.PivotBoard.Typescale.LabelLarge"
             android:textColor="?attr/colorOnSurfaceVariant" />
 
         <com.google.android.material.card.MaterialCardView

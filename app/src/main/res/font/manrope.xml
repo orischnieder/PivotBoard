@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Manrope, the app typeface. SIL Open Font License 1.1 - see font/OFL.txt.
+
+  Four weights are bundled rather than the variable font: a variable TTF needs
+  androidx.core's typeface support to vary at runtime, and static weights let
+  `android:textStyle="bold"` and the Material medium/semibold roles resolve on their own.
+
+  The android: attributes are what minSdk 26 uses; the app: duplicates let appcompat
+  resolve the same family, which is the documented way to declare a font family.
+-->
+<font-family xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <font
+        android:font="@font/manrope_regular"
+        android:fontStyle="normal"
+        android:fontWeight="400"
+        app:font="@font/manrope_regular"
+        app:fontStyle="normal"
+        app:fontWeight="400" />
+
+    <font
+        android:font="@font/manrope_medium"
+        android:fontStyle="normal"
+        android:fontWeight="500"
+        app:font="@font/manrope_medium"
+        app:fontStyle="normal"
+        app:fontWeight="500" />
+
+    <font
+        android:font="@font/manrope_semibold"
+        android:fontStyle="normal"
+        android:fontWeight="600"
+        app:font="@font/manrope_semibold"
+        app:fontStyle="normal"
+        app:fontWeight="600" />
+
+    <font
+        android:font="@font/manrope_bold"
+        android:fontStyle="normal"
+        android:fontWeight="700"
+        app:font="@font/manrope_bold"
+        app:fontStyle="normal"
+        app:fontWeight="700" />
+
+</font-family>

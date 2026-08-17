@@ -10,14 +10,13 @@
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/userlist_TB_toolbar"
+        style="@style/Widget.PivotBoard.Toolbar"
         android:layout_width="0dp"
         android:layout_height="?attr/actionBarSize"
-        android:background="@drawable/bg_toolbar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:navigationIcon="@drawable/ic_arrow_back"
-        app:titleTextColor="?attr/colorOnSurface" />
+        app:navigationIcon="@drawable/ic_arrow_back" />
 
     <include
         android:id="@+id/userlist_LAY_state"

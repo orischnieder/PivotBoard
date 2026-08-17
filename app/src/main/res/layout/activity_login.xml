@@ -29,12 +29,30 @@
                 android:layout_height="0dp"
                 android:layout_weight="1" />
 
-            <ImageView
-                android:id="@+id/login_IMG_logo"
-                android:layout_width="128dp"
-                android:layout_height="128dp"
-                android:contentDescription="@string/cd_app_logo"
-                android:src="@drawable/logo_pivotboard" />
+            <!--
+              The mark sits in a circular badge rather than floating on the surface: it gives the
+              logo a defined edge against both the light and dark backgrounds, and the brand ring
+              reads as deliberate framing. cardCornerRadius is half the size, which is what makes
+              a MaterialCardView a circle.
+            -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/login_CARD_logo"
+                android:layout_width="@dimen/logo_badge_size"
+                android:layout_height="@dimen/logo_badge_size"
+                app:cardBackgroundColor="?attr/colorSurfaceContainerLow"
+                app:cardCornerRadius="72dp"
+                app:cardElevation="@dimen/card_elevation"
+                app:strokeColor="?attr/colorPrimary"
+                app:strokeWidth="@dimen/logo_badge_stroke">
+
+                <ImageView
+                    android:id="@+id/login_IMG_logo"
+                    android:layout_width="@dimen/logo_badge_mark"
+                    android:layout_height="@dimen/logo_badge_mark"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/cd_app_logo"
+                    android:src="@drawable/logo_pivotboard" />
+            </com.google.android.material.card.MaterialCardView>
 
             <TextView
                 android:id="@+id/login_LBL_welcome"
@@ -43,7 +61,7 @@
                 android:layout_marginTop="@dimen/space_xl"
                 android:gravity="center"
                 android:text="@string/login_welcome"
-                android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"
+                android:textAppearance="@style/TextAppearance.PivotBoard.Typescale.HeadlineSmall"
                 android:textColor="?attr/colorOnSurface" />
 
             <TextView
@@ -53,7 +71,7 @@
                 android:layout_marginTop="@dimen/space_s"
                 android:gravity="center"
                 android:text="@string/login_sign_in"
-                android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+                android:textAppearance="@style/TextAppearance.PivotBoard.Typescale.BodyLarge"
                 android:textColor="?attr/colorOnSurfaceVariant" />
 
             <com.google.android.material.button.MaterialButton
@@ -63,7 +81,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="40dp"
                 android:text="@string/login_sign_in"
-                android:textAppearance="@style/TextAppearance.Material3.TitleMedium" />
+                android:textAppearance="@style/TextAppearance.PivotBoard.Typescale.TitleMedium" />
 
             <com.google.android.material.progressindicator.CircularProgressIndicator
                 android:id="@+id/login_PRG_loading"

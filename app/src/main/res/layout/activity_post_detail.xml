@@ -10,15 +10,14 @@
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/detail_TB_toolbar"
+        style="@style/Widget.PivotBoard.Toolbar"
         android:layout_width="0dp"
         android:layout_height="?attr/actionBarSize"
-        android:background="@drawable/bg_toolbar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:navigationIcon="@drawable/ic_arrow_back"
-        app:title="@string/detail_title"
-        app:titleTextColor="?attr/colorOnSurface" />
+        app:title="@string/detail_title" />
 
     <include
         android:id="@+id/detail_LAY_state"
@@ -133,7 +132,7 @@
                 android:layout_height="wrap_content"
                 android:paddingHorizontal="@dimen/gutter"
                 android:paddingTop="@dimen/space_s"
-                android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+                android:textAppearance="@style/TextAppearance.PivotBoard.Typescale.BodySmall"
                 android:textColor="?attr/colorPrimary"
                 android:visibility="gone"
                 tools:text="#earnings #gap"

@@ -37,6 +37,25 @@
         <item name="colorErrorContainer">@color/error_container_light</item>
         <item name="colorOnErrorContainer">@color/on_error_container_light</item>
 
+        <!--
+          Typeface. The textAppearance* attributes are what Material widgets resolve, so
+          repointing them is what carries Manrope into buttons, tabs, the bottom bar, text
+          fields and dialogs; the two fontFamily items catch plain views that have no text
+          appearance at all. See the Typescale block in styles.xml.
+        -->
+        <item name="fontFamily">@font/manrope</item>
+        <item name="android:fontFamily">@font/manrope</item>
+        <item name="textAppearanceHeadlineSmall">@style/TextAppearance.PivotBoard.Typescale.HeadlineSmall</item>
+        <item name="textAppearanceTitleLarge">@style/TextAppearance.PivotBoard.Typescale.TitleLarge</item>
+        <item name="textAppearanceTitleMedium">@style/TextAppearance.PivotBoard.Typescale.TitleMedium</item>
+        <item name="textAppearanceTitleSmall">@style/TextAppearance.PivotBoard.Typescale.TitleSmall</item>
+        <item name="textAppearanceBodyLarge">@style/TextAppearance.PivotBoard.Typescale.BodyLarge</item>
+        <item name="textAppearanceBodyMedium">@style/TextAppearance.PivotBoard.Typescale.BodyMedium</item>
+        <item name="textAppearanceBodySmall">@style/TextAppearance.PivotBoard.Typescale.BodySmall</item>
+        <item name="textAppearanceLabelLarge">@style/TextAppearance.PivotBoard.Typescale.LabelLarge</item>
+        <item name="textAppearanceLabelMedium">@style/TextAppearance.PivotBoard.Typescale.LabelMedium</item>
+        <item name="textAppearanceLabelSmall">@style/TextAppearance.PivotBoard.Typescale.LabelSmall</item>
+
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
